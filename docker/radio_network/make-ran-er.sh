@@ -19,7 +19,7 @@ mkdir build
 cd build
 #cmake ../ -DCMAKE_BUILD_TYPE=Debug -DENABLE_EXPORT=ON -DENABLE_ZEROMQ=ON
 cmake ../ -DENABLE_EXPORT=ON -DENABLE_ZEROMQ=ON
-make -j 8
+make -j `nproc`
 
 echo "Building srs-4G-UE (UE)..."
 cd "${ROOT_DIR}/srs-4G-UE"
@@ -28,4 +28,4 @@ mkdir build
 cd build
 cmake ../ -DCMAKE_CXX_FLAGS="-I../../srsRAN-5G-ER/lib"
 #cmake ../
-make -j 8
+make -j `nproc`
