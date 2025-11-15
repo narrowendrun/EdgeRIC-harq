@@ -24,8 +24,16 @@ avg_CQIs  = []
 
 # Initialize the EdgericMessenger for weights and the VWD stub.
 edgeric_messenger = EdgericMessenger(socket_type="weights")
-manual_q_values = [0.3965, 0.3564]  # 2 UEs: lowest RNTI→0.3, next→0.6 #for VWD policy only
-vwd_policy = VWDPolicy(manual_q=manual_q_values)
+
+
+manual_q = [0.246, 0.377] # Replace with your per-UE throughput constraints
+vwdpolicy = VWDPolicy(manual_q=manual_q)
+
+def algo5_vwd_multi(edgericmessenger):
+    ran_tti, ue_data = edgericmessenger.getmetrics(False)
+    weights = vwdpolicy.step(ran_tti, ue_data)
+    return weights
+
 
 def eval_loop_weight(eval_episodes, idx_algo):
     
@@ -73,10 +81,15 @@ def eval_loop_weight(eval_episodes, idx_algo):
             rr_cnt = rr_cnt + 1
             value_algo = "Round Robin"
 
-        # algo5 VWD (stub; only subscribes to RT-E2 metrics for now)
-        if(idx_algo == 5):
-            vwd_policy.step()  
-            value_algo = "VWD"
+        # # algo5 VWD (stub; only subscribes to RT-E2 metrics for now)
+        # if(idx_algo == 5):
+        #     vwd_policy.step() 
+        #     value_algo = "VWD"
+
+        if idx_algo == 5:
+            weights = algo5_vwd_multi(edgeric_messenger)
+            edgeric_messenger.sendschedulingweight(edgeric_messenger.ran_tti, weights, False)
+            valuealgo = 'VWD'
 
         if(flag == True):
             cnt = 0

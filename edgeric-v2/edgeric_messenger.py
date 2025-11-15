@@ -15,19 +15,21 @@ class EdgericMessenger:
         self.subscriber = self.context.socket(zmq.SUB)
         self.subscriber.setsockopt_string(zmq.SUBSCRIBE, "")  # Subscribe to all messages
         self.subscriber.setsockopt(zmq.CONFLATE, 1)  # Set the socket to conflate mode
-        self.subscriber.connect("ipc:///tmp/metrics")  # Connect to the IPC address for metrics
-        
+        # self.subscriber.connect("ipc:///tmp/metrics")  # Connect to the IPC address for metrics
+        self.subscriber.connect("tcp://10.53.2.4:5050")
 
         self.socket_type = socket_type
 
         if socket_type == "weights":
             # Create a publisher socket for SchedulingWeights
             self.publisher_socket = self.context.socket(zmq.PUB)
-            self.publisher_socket.bind("ipc:///tmp/control_weights_actions")  # Bind to the IPC address for weights
+            # self.publisher_socket.bind("ipc:///tmp/control_weights_actions")  # Bind to the IPC address for weights
+            self.publisher_socket.bind("tcp://10.53.2.5:5051")
         elif socket_type == "mcs":
             # Create a publisher socket for MCS
             self.publisher_socket = self.context.socket(zmq.PUB)
-            self.publisher_socket.bind("ipc:///tmp/control_mcs_actions")  # Bind to the IPC address for MCS
+            #self.publisher_socket.bind("ipc:///tmp/control_mcs_actions")  # Bind to the IPC address for MCS
+            self.publisher_socket.bind("tcp://10.53.2.5:5052")
 
         self.ue_dict = {}
         self.ran_tti = 0
@@ -52,7 +54,10 @@ class EdgericMessenger:
                 "rx_bytes": ue_metrics.rx_bytes,
                 "dl_buffer": ue_metrics.dl_buffer,
                 "ul_buffer": ue_metrics.ul_buffer,
-                "dl_tbs": ue_metrics.dl_tbs
+                "dl_tbs": ue_metrics.dl_tbs,
+                "ul_harq_ack": ue_metrics.ul_harq_ack,
+                "ul_tx_attempt": ue_metrics.ul_tx_attempt
+
             } for ue_metrics in metrics.ue_metrics}
 
             # Print the TTI count and UE metrics dictionary for debugging
@@ -79,6 +84,7 @@ class EdgericMessenger:
         self.publisher_socket.send(serialized_msg)
 
         if (msg.ran_index % 1000 == 0 and flag_print):
+        #if (msg.ran_index % 1 == 0):
             print("RT-E2 Policy (Scheduling): \n")
             print(f"Sent to RAN: {msg} \n")
 
@@ -97,5 +103,4 @@ class EdgericMessenger:
         if (msg.ran_index % 1000 == 0 and flag_print):
             print("RT-E2 Policy (MCS): \n")
             print(f"Sent to RAN: {msg} \n")
-
 

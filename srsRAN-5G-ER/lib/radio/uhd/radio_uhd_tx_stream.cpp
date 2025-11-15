@@ -72,6 +72,9 @@ void radio_uhd_tx_stream::recv_async_msg()
     case uhd::async_metadata_t::EVENT_CODE_USER_PAYLOAD:
       event_description.type = radio_notification_handler::event_type::OTHER;
       break;
+    default:
+    // Covers EVENT_CODE_E_OK and any future codes – nothing to do.
+      break;
   }
 
   // Notify event if it is defined.
