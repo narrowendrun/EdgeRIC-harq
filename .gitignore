@@ -15,3 +15,5 @@ __pycache__/
 *.pyd
 logs/
 oldLogs/
+docker/edgeric-v2/utils/__pycache__/
+docker/edgeric-v2/muApp1/vwd_policy_decisions.csv

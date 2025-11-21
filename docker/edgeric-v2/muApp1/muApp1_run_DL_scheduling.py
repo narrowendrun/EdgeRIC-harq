@@ -25,12 +25,16 @@ avg_CQIs  = []
 # Initialize the EdgericMessenger for weights and the VWD stub.
 edgeric_messenger = EdgericMessenger(socket_type="weights")
 
-
 manual_q = [0.246, 0.377] # Replace with your per-UE throughput constraints
 vwdpolicy = VWDPolicy(manual_q=manual_q)
 
 def algo5_vwd_multi(edgericmessenger):
-    ran_tti, ue_data = edgericmessenger.getmetrics(False)
+    ran_tti, ue_data = edgericmessenger.get_metrics(False)
+    
+    # FIX: Handle empty UE data
+    if not ue_data:
+        return []
+
     weights = vwdpolicy.step(ran_tti, ue_data)
     return weights
 
@@ -52,44 +56,48 @@ def eval_loop_weight(eval_episodes, idx_algo):
         if(idx_algo == 0):
             flag = False # to be deleted
             weights = fixed_weights()
-            edgeric_messenger.send_scheduling_weight(edgeric_messenger.ran_tti, weights, False)
+            if len(weights) > 0:
+                edgeric_messenger.send_scheduling_weight(edgeric_messenger.ran_tti, weights, False)
             value_algo = "Fixed Weights"
 
         # algo1 Max CQI       
         if(idx_algo == 1):
             weights = algo1_maxCQI_multi()
-            edgeric_messenger.send_scheduling_weight(edgeric_messenger.ran_tti, weights, False)
+            if len(weights) > 0:
+                edgeric_messenger.send_scheduling_weight(edgeric_messenger.ran_tti, weights, False)
             value_algo = "MaxCQI"
     
         # algo2 Max Weight
         if(idx_algo == 2):
             weights = algo2_maxWeight_multi()
-            edgeric_messenger.send_scheduling_weight(edgeric_messenger.ran_tti, weights, False)
+            if len(weights) > 0:
+                edgeric_messenger.send_scheduling_weight(edgeric_messenger.ran_tti, weights, False)
             value_algo = "MaxWeight"
         
         # algo3 PropFair
         if(idx_algo == 3):
             weights, average_cqis = algo3_propFair_multi(avg_CQIs)
             avg_CQIs = average_cqis 
-            edgeric_messenger.send_scheduling_weight(edgeric_messenger.ran_tti, weights, False)
+            if len(weights) > 0:
+                edgeric_messenger.send_scheduling_weight(edgeric_messenger.ran_tti, weights, False)
             value_algo = "Proportional Fairness"
 
         # algo4 RoundRobin
         if(idx_algo == 4):
             weights = algo4_roundrobin_multi(rr_cnt)
-            edgeric_messenger.send_scheduling_weight(edgeric_messenger.ran_tti, weights, False)
+            if len(weights) > 0:
+                edgeric_messenger.send_scheduling_weight(edgeric_messenger.ran_tti, weights, False)
             rr_cnt = rr_cnt + 1
             value_algo = "Round Robin"
 
-        # # algo5 VWD (stub; only subscribes to RT-E2 metrics for now)
-        # if(idx_algo == 5):
-        #     vwd_policy.step() 
-        #     value_algo = "VWD"
-
         if idx_algo == 5:
             weights = algo5_vwd_multi(edgeric_messenger)
-            edgeric_messenger.sendschedulingweight(edgeric_messenger.ran_tti, weights, False)
-            valuealgo = 'VWD'
+            # FIX: Check weights length before sending
+            if weights is not None and len(weights) > 0:
+                # FIX: Corrected method name from sendschedulingweight to send_scheduling_weight
+                edgeric_messenger.send_scheduling_weight(edgeric_messenger.ran_tti, weights, False)
+            # FIX: Corrected variable name from valuealgo to value_algo
+            value_algo = 'VWD'
 
         if(flag == True):
             cnt = 0
@@ -100,6 +108,10 @@ def eval_loop_weight(eval_episodes, idx_algo):
 def fixed_weights():
     global total_brate
     ran_tti, ue_data = edgeric_messenger.get_metrics(False)
+    
+    if not ue_data:
+        return []
+
     numues = len(ue_data)
     weights = np.zeros(numues * 2)
     RNTIs = list(ue_data.keys())
@@ -117,6 +129,11 @@ def fixed_weights():
 def algo1_maxCQI_multi():
     global total_brate
     ran_tti, ue_data = edgeric_messenger.get_metrics(False)
+    
+    # FIX: Return empty if no UEs attached
+    if not ue_data:
+        return []
+
     numues = len(ue_data)
     weights = np.zeros(numues * 2)
 
@@ -126,7 +143,7 @@ def algo1_maxCQI_multi():
     brate = np.sum(txb)
     total_brate.append(brate)
 
-    if min(CQIs) > 0:  # Check if all CQIs are positive
+    if CQIs and min(CQIs) > 0:  # Check if all CQIs are positive AND list is not empty
         maxIndex = np.argmax(CQIs)
         new_weights = np.zeros(numues)
         
@@ -153,6 +170,10 @@ def algo1_maxCQI_multi():
 def algo2_maxWeight_multi():
     global total_brate
     ran_tti, ue_data = edgeric_messenger.get_metrics(False)
+    
+    if not ue_data:
+        return []
+
     numues = len(ue_data)
     weights = np.zeros(numues * 2)
 
@@ -163,7 +184,7 @@ def algo2_maxWeight_multi():
     brate = np.sum(txb)
     total_brate.append(brate)
 
-    if min(CQIs) > 0: 
+    if CQIs and min(CQIs) > 0: 
         sum_CQI = np.sum(CQIs)
         sum_BL = np.sum(BLs) 
         if sum_BL != 0:
@@ -185,6 +206,10 @@ def algo2_maxWeight_multi():
 def algo3_propFair_multi(avg_CQIs):
     global total_brate
     ran_tti, ue_data = edgeric_messenger.get_metrics(False)
+    
+    if not ue_data:
+        return [], avg_CQIs
+
     numues = len(ue_data)
     weights = np.zeros(numues * 2)
 
@@ -195,14 +220,26 @@ def algo3_propFair_multi(avg_CQIs):
     brate = np.sum(txb)
     total_brate.append(brate)
 
-    if min(CQIs) > 0: 
+    # Resize avg_CQIs if number of UEs changed
+    if len(avg_CQIs) != numues:
+        avg_CQIs = np.zeros(numues)
+
+    if CQIs and min(CQIs) > 0: 
         gamma = 0.1 
         avg_CQIs = np.array(avg_CQIs)
         CQIs = np.array(CQIs)
         avg_CQIs = avg_CQIs*(1-gamma) + CQIs*(gamma)
         
-        temp_weights = CQIs / avg_CQIs 
-        new_weights = np.round(temp_weights / np.sum(temp_weights), 2)
+        # Prevent division by zero if avg_CQIs is still 0
+        with np.errstate(divide='ignore', invalid='ignore'):
+            temp_weights = CQIs / avg_CQIs 
+            temp_weights[np.isnan(temp_weights)] = 0
+            temp_weights[np.isinf(temp_weights)] = 0
+
+        if np.sum(temp_weights) > 0:
+            new_weights = np.round(temp_weights / np.sum(temp_weights), 2)
+        else:
+            new_weights = np.ones(numues) / numues
 
         for i in range(numues):
             weights[i*2+0] = RNTIs[i]
@@ -218,6 +255,10 @@ def algo3_propFair_multi(avg_CQIs):
 def algo4_roundrobin_multi(rr_cnt):
     global total_brate
     ran_tti, ue_data = edgeric_messenger.get_metrics(False)
+    
+    if not ue_data:
+        return []
+
     numues = len(ue_data)
     weights = np.zeros(numues * 2)
 
@@ -229,7 +270,7 @@ def algo4_roundrobin_multi(rr_cnt):
     index = rr_cnt % numues
     rr_cnt += 1
 
-    if min(CQIs) > 0:  # Check if all CQIs are positive
+    if CQIs and min(CQIs) > 0:  # Check if all CQIs are positive
         new_weights = np.zeros(numues)
         
         high = 1 - ((numues - 1) * 0.1)
@@ -261,6 +302,10 @@ def eval_loop_model(num_episodes, out_dir):
 
     for episode in range(num_episodes):
         ran_tti, ue_data = edgeric_messenger.get_metrics(False)
+        
+        if not ue_data:
+            continue
+
         numues = len(ue_data)
         weight = np.zeros(numues * 2)
 
@@ -289,7 +334,13 @@ def eval_loop_model(num_episodes, out_dir):
             action = torch.squeeze(action)
         
         for ue in range(numues):
-            percentage_RBG = action[ue] / sum(action)
+            # Safety check if action sum is 0
+            total_action = sum(action)
+            if total_action == 0:
+                percentage_RBG = 1.0 / numues
+            else:
+                percentage_RBG = action[ue] / total_action
+            
             weight[ue*2+1] = percentage_RBG
             weight[ue*2] = RNTIs[ue]
 
@@ -349,11 +400,14 @@ if __name__ == "__main__":
                         print("Unknown algorithm selected:", selected_algorithm)
                 else:
                     print("No algorithm selected or algorithm key does not exist in Redis.")
-                    
+                
+                # Add a small sleep to prevent hammering Redis if loop is tight/failing
+                time.sleep(0.1)
+
             except redis.exceptions.RedisError as e:
                 print("Redis error:", e)
+                time.sleep(1)
             except Exception as e:
                 print(f"An unexpected error occurred: {e}")
-
     except KeyboardInterrupt:
-        print("\nProgram interrupted. Exiting gracefully.")
+        print("DL scheduling loop interrupted. Exiting.")

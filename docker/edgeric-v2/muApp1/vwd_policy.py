@@ -22,6 +22,10 @@ class VWDPolicy:
         Main step function called at each TTI, matching the interface of other algorithms' multi functions.
         Returns weights array of shape (numUEs, 2): [RNTI, weight]
         """
+        # Safety check: If no UEs are connected, return empty weights
+        if not uedata:
+            return []
+
         rntis = sorted(uedata.keys())
         numues = len(rntis)
 
@@ -42,12 +46,24 @@ class VWDPolicy:
         ])
 
         # Decide scheduling threshold for optimizer
-        if self.q is None or len(self.q) != numues:
-            raise ValueError("q vector (manually specified) must be set and match the number of UEs.")
+        current_q = self.q
+        if self.q is None:
+            raise ValueError("q vector (manually specified) must be set.")
+        
+        # Handle dimension mismatch if num UEs != num manual_q entries
+        if len(self.q) != numues:
+            # If we have fewer UEs than config, slice q. If more, pad or error.
+            # Here we slice for safety during startup/teardown
+            if numues < len(self.q):
+                current_q = self.q[:numues]
+            else:
+                # Fallback: repeat last q value or handle as error. 
+                # For now, let's just resize roughly
+                current_q = np.resize(self.q, numues)
 
         # --- Recompute mu (==q), sigma2 using the optimizer only if p has changed or periodically ---
-        if (self.optim_params is None) or (rantti - self.last_update_tti > 100):
-            mu, sigma2, _, _ = optimize_aoi_fixed_mu(p_vec, self.q)
+        if (self.optim_params is None) or (rantti - self.last_update_tti > 100) or (len(self.optim_params['mu']) != numues):
+            mu, sigma2, _, _ = optimize_aoi_fixed_mu(p_vec, current_q)
             self.optim_params = {'mu': mu, 'sigma2': sigma2}
             self.last_update_tti = rantti
 
@@ -55,17 +71,24 @@ class VWDPolicy:
         d_vec = np.zeros(numues)
         for i, rnti in enumerate(rntis):
             t = len(self.Z_history[rnti])
+            # Ensure we access params safely
             mu_i = self.optim_params['mu'][i]
             sigma2_i = self.optim_params['sigma2'][i]
             Z_sum = sum(self.Z_history[rnti])
             d_vec[i] = (t * mu_i - Z_sum) / (np.sqrt(sigma2_i) + 1e-9)
 
         # --- Schedule: one-hot with '1' for max-deficit UE ---
-        weights = np.zeros((numues, 2))
-        for i, rnti in enumerate(rntis):
-            weights[i, 0] = rnti
+        weights = np.zeros((numues * 2)) # Corrected shape for flat array [RNTI, W, RNTI, W...]
+        
+        # Find index of max deficit
         max_i = np.argmax(d_vec)
-        weights[max_i, 1] = 1.0   # Assign all resource to UE with max deficit
+        
+        for i, rnti in enumerate(rntis):
+            weights[i*2+0] = rnti
+            if i == max_i:
+                weights[i*2+1] = 1.0
+            else:
+                weights[i*2+1] = 0.0
 
         self._log_decision(rantti, rntis, uedata, weights)
         return weights
@@ -84,12 +107,14 @@ class VWDPolicy:
         Append UE metrics and scheduling decisions to the CSV log for traceability.
         """
         rows = []
+        # weights is flat array [rnti, w, rnti, w]
         for idx, rnti in enumerate(rntis):
             metrics = dict(uedata.get(rnti, {}))
+            w = weights[idx*2+1]
             rows.append([
                 tti,
                 rnti,
-                float(weights[idx, 1]),
+                float(w),
                 json.dumps(metrics, sort_keys=True),
             ])
 
