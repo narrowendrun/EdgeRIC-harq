@@ -88,8 +88,8 @@ def eval_loop_weight(eval_episodes, idx_algo):
 
         if idx_algo == 5:
             weights = algo5_vwd_multi(edgeric_messenger)
-            edgeric_messenger.sendschedulingweight(edgeric_messenger.ran_tti, weights, False)
-            valuealgo = 'VWD'
+            edgeric_messenger.send_scheduling_weight(edgeric_messenger.ran_tti, weights, False)
+            value_algo = 'VWD'
 
         if(flag == True):
             cnt = 0

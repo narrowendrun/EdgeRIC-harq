@@ -21,11 +21,11 @@ cd build
 cmake ../ -DENABLE_EXPORT=ON -DENABLE_ZEROMQ=ON
 make -j `nproc`
 
-echo "Building srs-4G-UE (UE)..."
-cd "${ROOT_DIR}/srs-4G-UE"
-rm -rf build
-mkdir build
-cd build
-cmake ../ -DCMAKE_CXX_FLAGS="-I../../srsRAN-5G-ER/lib"
-#cmake ../
-make -j `nproc`
+#echo "Building srs-4G-UE (UE)..."
+#cd "${ROOT_DIR}/srs-4G-UE"
+#rm -rf build
+#mkdir build
+#cd build
+#cmake ../ -DCMAKE_CXX_FLAGS="-I../../srsRAN-5G-ER/lib"
+##cmake ../
+#make -j `nproc`

@@ -410,7 +410,9 @@ void ue_event_manager::handle_crc_indication(const ul_crc_indication& crc_ind)
           uint16_t rnti        = static_cast<uint16_t>(crc.rnti);
 
           // Mark this as a UL transmission attempt
+          printf("ul_tx_attempt: true\n");
           edgeric::set_ul_tx_attempt(rnti, true);
+
           
           // Simple probability-based ACK flipping
           if (crc.tb_crc_success && should_flip_ack(rnti)) {
@@ -438,7 +440,9 @@ void ue_event_manager::handle_crc_indication(const ul_crc_indication& crc_ind)
           }
 
           // Set the HARQ ACK result (after potential flip)
+          printf("harq_ack: %d\n", ack);
           edgeric::set_ul_harq_ack(rnti, ack);
+
           this->logger.debug("UL HARQ ACK set: call={} rnti={} rnti_calls={} tti_cnt={} ack={}",
                              total_call_count,
                              rnti,
@@ -455,7 +459,9 @@ void ue_event_manager::handle_crc_indication(const ul_crc_indication& crc_ind)
           // Log event.
           du_cells[ue_cc.cell_index].ev_logger->enqueue(scheduler_event_logger::crc_event{
               crc.ue_index, crc.rnti, ue_cc.cell_index, sl_rx, crc.harq_id, crc.tb_crc_success, crc.ul_sinr_dB});
+          printf("rx_bytes: %d\n", units::bytes{(unsigned)tbs}.value());
           edgeric::set_rx_bytes(static_cast<unsigned int>(crc.rnti), units::bytes{(unsigned)tbs}.value());
+
           // Notify metrics handler.
           metrics_handler.handle_crc_indication(crc, units::bytes{(unsigned)tbs});
           metrics_handler.handle_ul_delay(crc.ue_index, slot_delay);
@@ -487,7 +493,8 @@ void ue_event_manager::handle_harq_ind(ue_cell&                               ue
           result->update == dl_harq_process::status_update::nacked) {
         // In case the HARQ process is not waiting for more HARQ-ACK bits. Notify metrics handler with HARQ outcome.
         metrics_handler.handle_dl_harq_ack(
-            ue_cc.ue_index, result->update == dl_harq_process::status_update::acked, tbs);
+            ue_cc.ue_index, result->update == dl_harq_process::status_update::acked, tbs); 
+        printf("tx_bytes: %d\n", tbs.value());
         edgeric::set_tx_bytes(static_cast<unsigned int>(ue_cc.rnti()), tbs.value());   
       }
     }
