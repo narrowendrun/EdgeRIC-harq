@@ -1,0 +1,5 @@
+if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/du_manager/sib_test[1]_tests.cmake")
+  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/du_manager/sib_test[1]_tests.cmake")
+else()
+  add_test(sib_test_NOT_BUILT sib_test_NOT_BUILT)
+endif()

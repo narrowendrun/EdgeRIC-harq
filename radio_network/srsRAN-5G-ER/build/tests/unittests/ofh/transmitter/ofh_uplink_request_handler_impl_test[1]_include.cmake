@@ -1,0 +1,5 @@
+if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/ofh/transmitter/ofh_uplink_request_handler_impl_test[1]_tests.cmake")
+  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/ofh/transmitter/ofh_uplink_request_handler_impl_test[1]_tests.cmake")
+else()
+  add_test(ofh_uplink_request_handler_impl_test_NOT_BUILT ofh_uplink_request_handler_impl_test_NOT_BUILT)
+endif()

@@ -1,0 +1,16 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/benchmarks/scheduler/scheduler_multi_ue_benchmark.cpp"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"sched"
+		],
+		"name" : "scheduler_multi_ue_benchmark"
+	}
+}

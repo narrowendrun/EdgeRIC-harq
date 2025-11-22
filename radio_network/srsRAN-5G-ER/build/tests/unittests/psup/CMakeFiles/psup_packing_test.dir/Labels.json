@@ -1,0 +1,16 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/psup/psup_packing_test.cpp"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"psup"
+		],
+		"name" : "psup_packing_test"
+	}
+}

@@ -1,0 +1,8 @@
+# Directory labels
+ cu
+ du
+ integrationtest
+# Source files and their labels
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/integrationtests/du_high_cu/cu_du_test.cpp
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/integrationtests/du_high_cu/du_high_cu_test_simulator.cpp
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/integrationtests/du_high_cu/cu_multi_du_test.cpp

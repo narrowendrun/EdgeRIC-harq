@@ -1,0 +1,7 @@
+add_test( dl_csi_pdu_builder.valid_basic_parameters_passes /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/dl_csi_pdu_builder_test [==[--gtest_filter=dl_csi_pdu_builder.valid_basic_parameters_passes]==] --gtest_also_run_disabled_tests)
+set_tests_properties( dl_csi_pdu_builder.valid_basic_parameters_passes PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders)
+add_test( dl_csi_pdu_builder.valid_bwp_parameters_passes /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/dl_csi_pdu_builder_test [==[--gtest_filter=dl_csi_pdu_builder.valid_bwp_parameters_passes]==] --gtest_also_run_disabled_tests)
+set_tests_properties( dl_csi_pdu_builder.valid_bwp_parameters_passes PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders)
+add_test( dl_csi_pdu_builder.valid_tx_power_info_parameters_passes /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/dl_csi_pdu_builder_test [==[--gtest_filter=dl_csi_pdu_builder.valid_tx_power_info_parameters_passes]==] --gtest_also_run_disabled_tests)
+set_tests_properties( dl_csi_pdu_builder.valid_tx_power_info_parameters_passes PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders)
+set( dl_csi_pdu_builder_test_TESTS dl_csi_pdu_builder.valid_basic_parameters_passes dl_csi_pdu_builder.valid_bwp_parameters_passes dl_csi_pdu_builder.valid_tx_power_info_parameters_passes)

@@ -1,0 +1,16 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/adt/span_formatter_test.cpp"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"adt"
+		],
+		"name" : "span_formatter_test"
+	}
+}

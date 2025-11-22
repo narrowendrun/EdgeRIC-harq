@@ -1,0 +1,5 @@
+if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/cu_cp/mobility/cu_cp_mobility_test[1]_tests.cmake")
+  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/cu_cp/mobility/cu_cp_mobility_test[1]_tests.cmake")
+else()
+  add_test(cu_cp_mobility_test_NOT_BUILT cu_cp_mobility_test_NOT_BUILT)
+endif()

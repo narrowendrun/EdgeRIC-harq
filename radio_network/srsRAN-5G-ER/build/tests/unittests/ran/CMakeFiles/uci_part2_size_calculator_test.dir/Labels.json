@@ -1,0 +1,16 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/ran/uci/uci_part2_size_calculator_test.cpp"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"ran"
+		],
+		"name" : "uci_part2_size_calculator_test"
+	}
+}

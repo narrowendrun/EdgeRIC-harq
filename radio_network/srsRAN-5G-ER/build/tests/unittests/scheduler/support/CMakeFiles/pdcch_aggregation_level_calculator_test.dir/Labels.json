@@ -1,0 +1,16 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/scheduler/support/pdcch_aggregation_level_calculator_test.cpp"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"sched"
+		],
+		"name" : "pdcch_aggregation_level_calculator_test"
+	}
+}

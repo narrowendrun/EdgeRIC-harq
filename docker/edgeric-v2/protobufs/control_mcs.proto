@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-message mcs_control {
-    uint32 ran_index = 1;
-    repeated float mcs = 2;
-}
-
-
-

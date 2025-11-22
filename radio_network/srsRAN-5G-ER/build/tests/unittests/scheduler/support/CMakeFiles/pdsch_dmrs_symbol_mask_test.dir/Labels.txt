@@ -1,0 +1,4 @@
+# Directory labels
+ sched
+# Source files and their labels
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/scheduler/support/pdsch/pdsch_dmrs_symbol_mask_test.cpp

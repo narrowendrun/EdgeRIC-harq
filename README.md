@@ -1,167 +1,231 @@
-Refer to ``docker/`` for the multi container solution  
+# Multi-Container Solution with Dashboard Support
 
-## Current Implementation
-![Image 1](./images/ER-09-09-24.png "This is image ER")  
+This folder contains a multi-container application (development mode), composed of:
 
+- srsRAN gnb: it will build and run the srsRAN network, gnb and UEs.
+- Open5g core: an open source core to use with srsRAN gnb.
+- EdgeRIC - the realtime RAN controller.
+- Prometheus - Database for Grafana
+- Grafana - Container for the dashboard application  
 
-## Build the EdgeRIC compatible srsRAN network
-```bash
-sudo apt-get update
-sudo apt-get -y upgrade
-
-sudo apt-get install -y libfftw3-dev libmbedtls-dev libsctp-dev qt5-default libconfig++-dev net-tools nano libtool pkg-config build-essential autoconf automake git python3 python3-distutils python3-pip python3-apt libzmq3-dev python3-zmq software-properties-common
-
-sudo apt-get update
-sudo add-apt-repository ppa:gnuradio/gnuradio-releases
-sudo apt-get update
-sudo apt-get install -y gnuradio xterm python3-gi gobject-introspection gir1.2-gtk-3.0 iputils-ping iproute2 libx11-dev iperf
-
-sudo pip3 install --upgrade pip
-
-sudo pip3 install gym pandas torchvision tensorboard redis debugpy ray gymnasium dm_tree pyarrow typer scikit-image plotly
-sudo pip3 install hydra-core==1.1.0
-
-sudo pip3 uninstall -y protobuf
-sudo pip3 install protobuf==3.20.*
-
-git clone https://github.com/ucsdwcsng/EdgeRIC-on-5G.git
-cd EdgeRIC-on-5G
-git checkout srsran
-
-sudo ./make-ran-er.sh
-```
-# Run the Network
-## Core Network
-### Open5gs installation on Ubuntu 20
-Official documentation: [open5gs-quickstart](https://open5gs.org/open5gs/docs/guide/01-quickstart/)
-```bash
-sudo apt update
-sudo apt install gnupg
-curl -fsSL https://pgp.mongodb.com/server-6.0.asc | sudo gpg -o /usr/share/keyrings/mongodb-server-6.0.gpg --dearmor
-echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-6.0.gpg] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-sudo apt update
-sudo apt install -y mongodb-org
-sudo systemctl start mongod
-sudo systemctl enable mongod
-sudo add-apt-repository ppa:open5gs/latest
-sudo apt update
-sudo apt install open5gs
-
-# Install webui
-sudo apt update
-sudo apt install -y ca-certificates curl gnupg
-sudo mkdir -p /etc/apt/keyrings
-curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg
-
- # Create deb repository
-NODE_MAJOR=20
-echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | sudo tee /etc/apt/sources.list.d/nodesource.list
-
- # Run Update and Install webui
-sudo apt update
-sudo apt install nodejs -y
-curl -fsSL https://open5gs.org/open5gs/assets/webui/install | sudo -E bash -
-``` 
-Run the following commands:  
-```bash
-$ sudo systemctl restart open5gs-mmed
-$ sudo systemctl restart open5gs-sgwcd
-$ sudo systemctl restart open5gs-smfd
-$ sudo systemctl restart open5gs-amfd
-$ sudo systemctl restart open5gs-sgwud
-$ sudo systemctl restart open5gs-upfd
-$ sudo systemctl restart open5gs-hssd
-$ sudo systemctl restart open5gs-pcrfd
-$ sudo systemctl restart open5gs-nrfd
-$ sudo systemctl restart open5gs-scpd
-$ sudo systemctl restart open5gs-seppd
-$ sudo systemctl restart open5gs-ausfd
-$ sudo systemctl restart open5gs-udmd
-$ sudo systemctl restart open5gs-pcfd
-$ sudo systemctl restart open5gs-nssfd
-$ sudo systemctl restart open5gs-bsfd
-$ sudo systemctl restart open5gs-udrd
-$ sudo systemctl restart open5gs-webui
-```
-**how to know open5gs is installed?**  
-Run ``ps aux | grep open5gs`` --> this will show 16 active processes  
-**Where are open5gs configs located?**  
-``~/etc/open5gs`` --> folder contains all config files as .yaml --> to write, you need to change permission --> ``sudo chmod a+w ~/etc/open5gs/``  
-This repository contains all the open5gs configs used in folder ``open5gs``  
-**How to update UE data base on open5gs core network?**  
-``http://localhost:9999`` --> username: admin, password: 1423, add all UE sim credentials, press ``Add a subscriber``
+## Start the containers 
  
-## Radio Access Network
+**Terminal 0: Launch the open5gs Core Network** 
+```bash
+docker-compose up --build 5gc
+```
+**Terminal 1: Connect your network to the internet**  
+```bash
+docker exec -it open5gs_5gc bash
+sysctl -w net.ipv4.ip_forward=1
+iptables -t nat -A POSTROUTING -s 10.45.1.0/16 ! -o ogstun -j MASQUERADE
+```
 
-### Running in over the air mode 
-Make sure you have UHD installed   
-**Run the srsRAN**  
+**Terminal 2: Start the Radio Access Network container** 
 ```bash
-sudo ./run_gnb_ota.sh
+docker-compose up gnb
 ```
-**Run User Equipments (srsue) with USRP**  
-Update the UE config files, update ``[rf]`` section with the following, [refer here](https://docs.srsran.com/projects/project/en/latest/tutorials/source/srsUE/source/index.html#over-the-air-setup):  
-``device_name = uhd``  
-``device_args = ip_addr_of_sdr`` 
+**Terminal 3: Start the EdgeRIC container** 
+```bash
+docker-compose up edgeric
+```
+# Run the network
+The following steps will guide you to run a 2UE network in the virtual radio mode   
 
-### Running in zmq mode (virtual radios)
+You need to run the following from inside the srsRAN gnb container
 
-**GNU flowgraph - (Terminal 1)**  
-Run the GNU radio flowgraph - for two UEs run:
+**Terminal 3: Build srsRAN**
 ```bash
-python3 2ue-zmq-mode-23.04Mhz.py
+docker exec -it srsran_gnb bash
+./make_ran_er.sh
 ```
-Run the GNU radio flowgraph - for four UEs run:
+Once built, Start the GNU radio flowgraph in the same terminal
 ```bash
-python3 4ue-zmq-mode-23.04Mhz.py
+python3 2ue-zmq-mode-23.04Mhz-nogui.py # for 2ues, to run 4ues - run python3 4ue-zmq-mode-23.04Mhz-nogui.py
 ```
-**Run the srsRAN - (Terminal 2)**
+**Known Issue - Look out for**
 ```bash
-sudo ./run_gnb_multi_ue.sh
+sudo lsof -i :5555
+sudo lsof -i :5556
+sudo lsof -i :5557
 ```
-Press ``t`` to see the network metrics  
-**Run User Equipments (srsue) in zmq mode - - (Terminal 3)**  
-For two UEs, you can run the script:
-```bash
-sudo ./run2ue-zmq-mode.sh
-```
-For four UEs, you can run the script:
-```bash
-sudo ./run4ue-zmq-mode.sh
-```
-You can also run the UEs in separate terminals
+Make sure to kill all these in case it is still active ``sudo kill -9 <PID>``    
 
-## Traffic Generation
-**(Terminal 4)**
+**Terminal 4: Run the RAN**
 ```bash
+docker exec -it srsran_gnb bash
+./run_gnb_multi_ue.sh
+```
+Press ``t`` to see the console trace  
+
+**Terminal 5: Run the UEs**
+```bash
+docker exec -it srsran_gnb bash
+./run2ue-zmq-mode.sh # for 2ues, to run 4ues - run ./run4ue-zmq-mode.sh
+```
+The ip addresses assigned to UEs will be 10.45.1.2/24, to run any traffic originating from ues, you need run it from their namespaces ``ip netns exec ue{i}``    
+The srsRAN gnb container starts up with 4 UE namespaces, to run more UEs, you need to add more, with command ``ip netns add``
+
+# Run Traffic
+
+For downlink traffic, start the traffic server on the UEs:  
+**Terminal 6: start iperf server at the UEs**  
+```bash
+docker exec -it srsran_gnb bash
 cd traffic-generator
-sudo ./iperf_server_2ues.sh
+./iperf_server_2ues.sh 
 ```
-**(Terminal 5)**
+**Terminal 7: Start iperf client for UE1**  
+To run traffic from the open5gs CN container, you have to use ``docker exec -it open5gs_5gc``  
 ```bash
-cd traffic-generator
-sudo ./iperf_client_2ues.sh 13M 13M 1000
+docker exec -it open5gs_5gc iperf -c 10.45.1.2 -u -i 1 -b 10M -t 1000
+```
+**Terminal 8: Start iperf client for UE2**  
+```bash
+docker exec -it open5gs_5gc iperf -c 10.45.1.3 -u -i 1 -b 10M -t 1000
 ```
 
-# How to run EdgeRIC?
-Refer to ``edgeric-v2`` for documentation
+# Try out EdgeRIC muApps
+You need to run the following from inside the srsRAN gnb container ``docker exec -it edgeric_v2 bash``  
 
-# Other info
-Refer to ``srsRAN-5G-ER`` for documentation of the ``rt-agent``   
-``Installations_and_setup.md`` --> contains documentation on how to setup the network    
-``debugging_and_log_files.md`` --> contains documentation on necessary files needed to debug you network connectivity 
+**Known Issue - Look out for**  
+```bash
+sudo lsof -i :5555
+sudo lsof -i :5556
+sudo lsof -i :5557
+```
+Make sure to kill all these in case it is still active ``sudo kill -9 <PID>``   
 
-### Summary of all config file locations found in this repository
-``/open5gs`` --> All open5gs configs  
-**Configs below are for a 10MHz BW system, 20MHz settings are also available as comments**  
-``/srs-4G-UE/.config/ue-4g-zmq.conf`` --> config file to run 1 srsue in zmq mode, check section ``[usim]`` and appropriately add those credentials in the open5gs webui database        
-``/srs-4G-UE/.config/ue1-4g-zmq.conf`` --> config file for UE1 in multi UE zmq mode, check section ``[usim]`` and appropriately add those credentials in the open5gs webui database        
-``/srs-4G-UE/.config/ue2-4g-zmq.conf`` --> config file for UE2 in multi UE zmq mode, check section ``[usim]`` and appropriately add those credentials in the open5gs webui database     
-``/srs-4G-UE/.config/ue3-4g-zmq.conf`` --> config file for UE3 in multi UE zmq mode, check section ``[usim]`` and appropriately add those credentials in the open5gs webui database     
-``/srs-4G-UE/.config/ue4-4g-zmq.conf`` --> config file for UE4 in multi UE zmq mode, check section ``[usim]`` and appropriately add those credentials in the open5gs webui database     
-``/srsRAN-5G-ER/configs/n320-ota-amarisoft.yml`` --> run srsgnb in Over the air mode with usrp N320, in section ``cell_cfg`` you can change the band and bandwidth of operation      
-``/srsRAN-5G-ER/configs/zmq-mode.yml`` --> run srsgnb in zmq mode with 1 srsue     
-``/srsRAN-5G-ER/configs/zmq-mode-multi-ue.yml`` --> run srsgnb in zmq mode for multiple UEs     
+## muApp1: Run the scheduling muApp
+**Terminal 9: Set the scheduling algorithm**  
+```bash
+docker exec -it edgeric_v2 bash
+redis-cli set scheduling_algorithm "Max CQI" # Other options "Proportional Fair"
+                                             # "Max Weight", "Round Robin", "VWD", "RL"
+```
+**Terminal 10: Start the muApp** 
+```bash
+docker exec -it edgeric_v2 bash
+cd muApp1
+python3 muApp1_run_DL_scheduling.py
+```
+### What to observe 
+Terminal 10 will show the algorithms selected and will print the total average system throughput observed
+```bash
+Algorithm index:  2  ,  Max Weight
+total system throughput: 8.781944 
 
-For a full set of allowed configs from srsRAN, refer [here](https://docs.srsran.com/projects/project/en/latest/user_manuals/source/config_ref.html)
+Algorithm index:  2  ,  Max Weight
+total system throughput: 8.063600000000001 
 
+Algorithm index:  2  ,  Max Weight
+total system throughput: 8.093352 
+
+Algorithm index:  2  ,  Max Weight
+total system throughput: 8.071168 
+```
+**Terminal 9** - To observe the throughput updates, update the scheduler with the following command 
+```bash
+redis-cli set scheduling_algorithm "RL" 
+```
+
+**Terminal 10** - Increased system throughput observed with our trained RL model
+```bash
+Algorithm index:  20  ,  RL
+Executing RL model at: ./rl_model/fully_trained_model
+total system throughput: 12.071200000000001 
+
+Algorithm index:  20  ,  RL
+Executing RL model at: ./rl_model/fully_trained_model
+total system throughput: 11.727624 
+
+Algorithm index:  20  ,  RL
+Executing RL model at: ./rl_model/fully_trained_model
+total system throughput: 11.714879999999999 
+
+Algorithm index:  20  ,  RL
+Executing RL model at: ./rl_model/fully_trained_model
+total system throughput: 11.710384 
+
+Algorithm index:  20  ,  RL
+Executing RL model at: ./rl_model/fully_trained_model
+total system throughput: 11.743776 
+```
+
+## muApp3 - Running the Monitoring muApp
+This muApp will help us see the RT-E2 Report Message from the RAN and the RT-E2 Policy message sent to RAN  
+
+```bash
+docker exec -it edgeric_v2 bash
+cd muApp3
+python3 muApp3_monitor_terminal.py 
+```
+**What to observe**  
+```bash
+RT-E2 Report: 
+
+RAN Index: 791000, RIC index: 790998 
+
+UE Dictionary: {70: {'CQI': 7, 'SNR': 115.46858215332031, 'Backlog': 384977, 'Pending Data': 0, 'Tx_brate': 1980.0, 'Rx_brate': 0.0}, 71: {'CQI': 8, 'SNR': 116.41766357421875, 'Backlog': 1503, 'Pending Data': 0, 'Tx_brate': 0.0, 'Rx_brate': 0.0}} 
+
+```
+
+## Try out fixed weight scheduling and MCS control - Build your policies on top of these helper files
+Edit the python files to chose fixed scheduling and mcs actions  
+```bash
+docker exec -it edgeric_v2 bash
+python3 send_mcs.py
+```
+
+```bash
+docker exec -it edgeric_v2 bash
+sudo python3 send_weight.py
+```
+**What will you see**
+```bash
+RT-E2 Policy (Scheduling): 
+Sent to RAN: ran_index: 790999
+weights: 70.0
+weights: 0.7
+weights: 71.0
+weights: 0.3
+```
+
+# Dashboard Support with Grafana
+## Prometheus and Grafana
+Start the prometheus data base and the grafana dashboard containers
+```bash
+cd prometheus
+docker compose up prometheus
+```
+
+```bash
+cd grafana
+docker compose up grafana
+```
+## Create the Docker network between edgeric, prometheus and grafana
+```bash
+docker network create monitoring
+docker network connect monitoring prometheus
+docker network connect monitoring edgeric_v2
+docker network connect monitoring grafana
+```
+check https://localhost:3000 web whether Grafana can run correctly  
+
+## Pulling Metrics with edgeric rt-e2 agent 
+From the edgeric container, start the monitoring_grafana muApp 
+```bash
+docker exec -it edgeric_v2 bash
+cd muApp3
+python3 muApp3_monitor_grafana.py
+```
+check https://localhost:9090 web whether Prometheus can run correctly  
+check https://localhost:8000 - edgeric muApp writes the metrics here, for Prometheus  
+
+## Opening the Dashboard 
+Step 1: https://localhost:3000 - Dashboard  
+Step 2: Import the dashboard provided in the repository - located in ``grafana/dashboard.json``  
+Step 3: Add data source   
+
+
+### TODO: how to add subsribers, sim card provisioning 

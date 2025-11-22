@@ -1,0 +1,4 @@
+# Directory labels
+ rrc
+# Source files and their labels
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/rrc/rrc_ue_test_messages.cpp

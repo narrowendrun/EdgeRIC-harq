@@ -1,0 +1,9 @@
+# Directory labels
+ cu_cp
+# Source files and their labels
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/cu_cp/CMakeFiles/cu_cp_test.dir/Unity/unity_0_cxx.cxx
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/cu_cp/cu_cp_test.cpp
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/cu_cp/cu_cp_connectivity_test.cpp
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/cu_cp/cu_cp_setup_test.cpp
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/cu_cp/cu_cp_reestablishment_test.cpp
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/cu_cp/cu_cp_initial_context_setup_test.cpp

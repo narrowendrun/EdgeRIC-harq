@@ -1,0 +1,16 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/ofh/transmitter/ofh_uplane_packet_segment_calculator_test.cpp"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"transmitter"
+		],
+		"name" : "ofh_uplane_packet_segment_calculator_test"
+	}
+}

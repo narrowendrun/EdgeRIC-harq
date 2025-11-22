@@ -1,0 +1,5 @@
+if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/cu_cp/up_resource_manager/up_resource_manager_test[1]_tests.cmake")
+  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/cu_cp/up_resource_manager/up_resource_manager_test[1]_tests.cmake")
+else()
+  add_test(up_resource_manager_test_NOT_BUILT up_resource_manager_test_NOT_BUILT)
+endif()

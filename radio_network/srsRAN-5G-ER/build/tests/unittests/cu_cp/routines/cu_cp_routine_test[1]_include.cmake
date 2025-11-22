@@ -1,0 +1,5 @@
+if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/cu_cp/routines/cu_cp_routine_test[1]_tests.cmake")
+  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/cu_cp/routines/cu_cp_routine_test[1]_tests.cmake")
+else()
+  add_test(cu_cp_routine_test_NOT_BUILT cu_cp_routine_test_NOT_BUILT)
+endif()

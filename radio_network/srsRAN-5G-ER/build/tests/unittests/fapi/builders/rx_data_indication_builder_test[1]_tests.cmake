@@ -1,0 +1,5 @@
+add_test( rx_data_indication_builder.valid_basic_parameters_passes /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/rx_data_indication_builder_test [==[--gtest_filter=rx_data_indication_builder.valid_basic_parameters_passes]==] --gtest_also_run_disabled_tests)
+set_tests_properties( rx_data_indication_builder.valid_basic_parameters_passes PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders)
+add_test( rx_data_indication_builder.add_custom_pdu_passes /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/rx_data_indication_builder_test [==[--gtest_filter=rx_data_indication_builder.add_custom_pdu_passes]==] --gtest_also_run_disabled_tests)
+set_tests_properties( rx_data_indication_builder.add_custom_pdu_passes PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders)
+set( rx_data_indication_builder_test_TESTS rx_data_indication_builder.valid_basic_parameters_passes rx_data_indication_builder.add_custom_pdu_passes)

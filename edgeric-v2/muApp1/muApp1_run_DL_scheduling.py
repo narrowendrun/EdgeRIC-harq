@@ -30,7 +30,7 @@ manual_q = [0.246, 0.377] # Replace with your per-UE throughput constraints
 vwdpolicy = VWDPolicy(manual_q=manual_q)
 
 def algo5_vwd_multi(edgericmessenger):
-    ran_tti, ue_data = edgericmessenger.getmetrics(False)
+    ran_tti, ue_data = edgericmessenger.get_metrics(False)
     weights = vwdpolicy.step(ran_tti, ue_data)
     return weights
 
@@ -88,8 +88,8 @@ def eval_loop_weight(eval_episodes, idx_algo):
 
         if idx_algo == 5:
             weights = algo5_vwd_multi(edgeric_messenger)
-            edgeric_messenger.sendschedulingweight(edgeric_messenger.ran_tti, weights, False)
-            valuealgo = 'VWD'
+            edgeric_messenger.send_scheduling_weight(edgeric_messenger.ran_tti, weights, False)
+            value_algo = 'VWD'
 
         if(flag == True):
             cnt = 0

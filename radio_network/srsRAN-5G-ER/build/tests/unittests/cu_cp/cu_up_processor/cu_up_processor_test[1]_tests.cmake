@@ -1,0 +1,3 @@
+add_test( cu_up_processor_test.when_valid_e1_setup_received_then_e1_setup_response_sent /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/cu_cp/cu_up_processor/cu_up_processor_test [==[--gtest_filter=cu_up_processor_test.when_valid_e1_setup_received_then_e1_setup_response_sent]==] --gtest_also_run_disabled_tests)
+set_tests_properties( cu_up_processor_test.when_valid_e1_setup_received_then_e1_setup_response_sent PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/cu_cp/cu_up_processor LABELS cu_up_processor)
+set( cu_up_processor_test_TESTS cu_up_processor_test.when_valid_e1_setup_received_then_e1_setup_response_sent)

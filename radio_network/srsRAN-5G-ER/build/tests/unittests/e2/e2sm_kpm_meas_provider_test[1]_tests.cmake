@@ -1,0 +1,5 @@
+add_test( e2sm_kpm_meas_provider_test.e2sm_kpm_ind_three_drb_rlc_metrics /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/e2/e2sm_kpm_meas_provider_test [==[--gtest_filter=e2sm_kpm_meas_provider_test.e2sm_kpm_ind_three_drb_rlc_metrics]==] --gtest_also_run_disabled_tests)
+set_tests_properties( e2sm_kpm_meas_provider_test.e2sm_kpm_ind_three_drb_rlc_metrics PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/e2)
+add_test( e2sm_kpm_meas_provider_test.e2sm_kpm_ind_e2_level_rlc_metrics /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/e2/e2sm_kpm_meas_provider_test [==[--gtest_filter=e2sm_kpm_meas_provider_test.e2sm_kpm_ind_e2_level_rlc_metrics]==] --gtest_also_run_disabled_tests)
+set_tests_properties( e2sm_kpm_meas_provider_test.e2sm_kpm_ind_e2_level_rlc_metrics PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/e2)
+set( e2sm_kpm_meas_provider_test_TESTS e2sm_kpm_meas_provider_test.e2sm_kpm_ind_three_drb_rlc_metrics e2sm_kpm_meas_provider_test.e2sm_kpm_ind_e2_level_rlc_metrics)

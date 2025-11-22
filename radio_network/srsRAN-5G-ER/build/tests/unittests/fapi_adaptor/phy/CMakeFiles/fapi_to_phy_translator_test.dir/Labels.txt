@@ -1,0 +1,4 @@
+# Directory labels
+ fapi_adaptor
+# Source files and their labels
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/fapi_adaptor/phy/fapi_to_phy_translator_test.cpp

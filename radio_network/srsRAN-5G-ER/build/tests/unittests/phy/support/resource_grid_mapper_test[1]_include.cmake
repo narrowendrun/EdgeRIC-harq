@@ -1,0 +1,5 @@
+if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/phy/support/resource_grid_mapper_test[1]_tests.cmake")
+  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/phy/support/resource_grid_mapper_test[1]_tests.cmake")
+else()
+  add_test(resource_grid_mapper_test_NOT_BUILT resource_grid_mapper_test_NOT_BUILT)
+endif()

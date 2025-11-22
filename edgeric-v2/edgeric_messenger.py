@@ -34,7 +34,7 @@ class EdgericMessenger:
         self.ue_dict = {}
         self.ran_tti = 0
 
-    def get_metrics(self, flag_print):
+    def get_metrics(self, flag_print=True):
         tti_count = 0
 
         try:

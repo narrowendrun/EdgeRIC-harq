@@ -1,0 +1,5 @@
+# Directory labels
+ sched
+# Source files and their labels
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/scheduler/test_utils/scheduler_test_suite.cpp
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/scheduler/test_utils/scheduler_output_test_helpers.cpp

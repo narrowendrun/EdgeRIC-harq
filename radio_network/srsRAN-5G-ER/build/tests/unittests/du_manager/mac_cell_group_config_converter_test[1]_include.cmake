@@ -1,0 +1,5 @@
+if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/du_manager/mac_cell_group_config_converter_test[1]_tests.cmake")
+  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/du_manager/mac_cell_group_config_converter_test[1]_tests.cmake")
+else()
+  add_test(mac_cell_group_config_converter_test_NOT_BUILT mac_cell_group_config_converter_test_NOT_BUILT)
+endif()

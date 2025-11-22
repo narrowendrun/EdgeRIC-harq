@@ -1,0 +1,26 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/srsran_support.dir/backtrace.cpp.o"
+  "CMakeFiles/srsran_support.dir/bit_encoding.cpp.o"
+  "CMakeFiles/srsran_support.dir/byte_buffer.cpp.o"
+  "CMakeFiles/srsran_support.dir/byte_buffer_chain.cpp.o"
+  "CMakeFiles/srsran_support.dir/config_yaml.cpp.o"
+  "CMakeFiles/srsran_support.dir/cpu_architecture_info.cpp.o"
+  "CMakeFiles/srsran_support.dir/event_tracing.cpp.o"
+  "CMakeFiles/srsran_support.dir/executors/priority_task_queue.cpp.o"
+  "CMakeFiles/srsran_support.dir/executors/priority_task_worker.cpp.o"
+  "CMakeFiles/srsran_support.dir/executors/task_execution_manager.cpp.o"
+  "CMakeFiles/srsran_support.dir/executors/task_worker.cpp.o"
+  "CMakeFiles/srsran_support.dir/executors/task_worker_pool.cpp.o"
+  "CMakeFiles/srsran_support.dir/executors/unique_thread.cpp.o"
+  "CMakeFiles/srsran_support.dir/math_utils.cpp.o"
+  "CMakeFiles/srsran_support.dir/signal_handling.cpp.o"
+  "CMakeFiles/srsran_support.dir/sysinfo.cpp.o"
+  "CMakeFiles/srsran_support.dir/timers.cpp.o"
+  "libsrsran_support.a"
+  "libsrsran_support.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/srsran_support.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

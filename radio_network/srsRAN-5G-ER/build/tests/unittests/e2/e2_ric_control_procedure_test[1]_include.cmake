@@ -1,0 +1,5 @@
+if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/e2/e2_ric_control_procedure_test[1]_tests.cmake")
+  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/e2/e2_ric_control_procedure_test[1]_tests.cmake")
+else()
+  add_test(e2_ric_control_procedure_test_NOT_BUILT e2_ric_control_procedure_test_NOT_BUILT)
+endif()

@@ -1,0 +1,5 @@
+if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/scheduler/multi_cell_scheduler_test[1]_tests.cmake")
+  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/scheduler/multi_cell_scheduler_test[1]_tests.cmake")
+else()
+  add_test(multi_cell_scheduler_test_NOT_BUILT multi_cell_scheduler_test_NOT_BUILT)
+endif()

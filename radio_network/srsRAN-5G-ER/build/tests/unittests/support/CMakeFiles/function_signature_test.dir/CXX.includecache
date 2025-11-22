@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/srsran/support/async/detail/function_signature.h
+srsran/support/detail/type_list.h
+../include/srsran/support/async/detail/srsran/support/detail/type_list.h
+
+../include/srsran/support/detail/type_list.h
+type_traits
+-
+
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/support/function_signature_test.cpp
+srsran/support/async/detail/function_signature.h
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/support/srsran/support/async/detail/function_signature.h
+

@@ -1,0 +1,5 @@
+if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/ofh/serdes/ofh_uplane_packet_decoder_dynamic_impl[1]_tests.cmake")
+  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/ofh/serdes/ofh_uplane_packet_decoder_dynamic_impl[1]_tests.cmake")
+else()
+  add_test(ofh_uplane_packet_decoder_dynamic_impl_NOT_BUILT ofh_uplane_packet_decoder_dynamic_impl_NOT_BUILT)
+endif()

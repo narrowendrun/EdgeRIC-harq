@@ -1,0 +1,38 @@
+# The set of languages for which implicit dependencies are needed:
+set(CMAKE_DEPENDS_LANGUAGES
+  "CXX"
+  )
+# The set of files for implicit dependencies of each language:
+set(CMAKE_DEPENDS_CHECK_CXX
+  "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/lib/asn1/f1ap/common.cpp" "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/lib/asn1/CMakeFiles/f1ap_asn1.dir/f1ap/common.cpp.o"
+  "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/lib/asn1/f1ap/f1ap.cpp" "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/lib/asn1/CMakeFiles/f1ap_asn1.dir/f1ap/f1ap.cpp.o"
+  "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/lib/asn1/f1ap/f1ap_ies.cpp" "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/lib/asn1/CMakeFiles/f1ap_asn1.dir/f1ap/f1ap_ies.cpp.o"
+  "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/lib/asn1/f1ap/f1ap_pdu_contents.cpp" "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/lib/asn1/CMakeFiles/f1ap_asn1.dir/f1ap/f1ap_pdu_contents.cpp.o"
+  "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/lib/asn1/f1ap/f1ap_pdu_contents_ue.cpp" "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/lib/asn1/CMakeFiles/f1ap_asn1.dir/f1ap/f1ap_pdu_contents_ue.cpp.o"
+  "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/lib/asn1/f1ap/f1ap_pdu_items.cpp" "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/lib/asn1/CMakeFiles/f1ap_asn1.dir/f1ap/f1ap_pdu_items.cpp.o"
+  )
+set(CMAKE_CXX_COMPILER_ID "GNU")
+
+# Preprocessor definitions for this target.
+set(CMAKE_TARGET_DEFINITIONS_CXX
+  "ASSERTS_ENABLED"
+  )
+
+# The include file search paths:
+set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "../include"
+  "../external/fmt/include"
+  "../external"
+  )
+
+# Targets to which this target links.
+set(CMAKE_TARGET_LINKED_INFO_FILES
+  "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/lib/asn1/CMakeFiles/asn1_utils.dir/DependInfo.cmake"
+  "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/lib/support/CMakeFiles/srsran_support.dir/DependInfo.cmake"
+  "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/lib/support/network/CMakeFiles/srsran_network.dir/DependInfo.cmake"
+  "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/lib/srslog/CMakeFiles/srslog.dir/DependInfo.cmake"
+  "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/external/fmt/CMakeFiles/fmt.dir/DependInfo.cmake"
+  )
+
+# Fortran module output directory.
+set(CMAKE_Fortran_TARGET_MODULE_DIR "")

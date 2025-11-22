@@ -1,0 +1,5 @@
+if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/tx_precoding_and_beamforming_pdu_builder_test[1]_tests.cmake")
+  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/tx_precoding_and_beamforming_pdu_builder_test[1]_tests.cmake")
+else()
+  add_test(tx_precoding_and_beamforming_pdu_builder_test_NOT_BUILT tx_precoding_and_beamforming_pdu_builder_test_NOT_BUILT)
+endif()

@@ -1,0 +1,6 @@
+# Directory labels
+ ofh
+# Source files and their labels
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/integrationtests/ofh/ru_emulator_cli11_schema.cpp
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/integrationtests/ofh/ru_emulator.cpp
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/integrationtests/ofh/ru_emulator_socket_transceiver.cpp

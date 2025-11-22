@@ -1,0 +1,5 @@
+if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/sdap/sdap_test[1]_tests.cmake")
+  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/sdap/sdap_test[1]_tests.cmake")
+else()
+  add_test(sdap_test_NOT_BUILT sdap_test_NOT_BUILT)
+endif()

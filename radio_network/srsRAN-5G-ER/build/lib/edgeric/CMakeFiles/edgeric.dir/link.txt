@@ -1,0 +1,2 @@
+/usr/bin/ar qc libedgeric.a  CMakeFiles/edgeric.dir/edgeric.cpp.o CMakeFiles/edgeric.dir/control_mcs.pb.cc.o CMakeFiles/edgeric.dir/control_weights.pb.cc.o CMakeFiles/edgeric.dir/metrics.pb.cc.o
+/usr/bin/ranlib libedgeric.a

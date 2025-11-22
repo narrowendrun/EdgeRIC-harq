@@ -18,3 +18,4 @@ oldLogs/
 docker/edgeric-v2/__pycache__/
 docker/edgeric-v2/muApp1/vwd_policy_decisions.csv
 docker/radio_network/srsRAN-5G-ER/scheduling-final.txt
+scheduling-final.txt 

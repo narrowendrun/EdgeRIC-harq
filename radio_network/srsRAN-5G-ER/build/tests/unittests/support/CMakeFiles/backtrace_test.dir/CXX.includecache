@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/srsran/support/backtrace.h
+
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/support/backtrace_test.cpp
+srsran/support/backtrace.h
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/support/srsran/support/backtrace.h
+string
+-
+

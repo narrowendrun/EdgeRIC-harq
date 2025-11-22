@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/srsran/support/build_info/build_info.h
+
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/lib/support/build_info/build_info.cpp
+srsran/support/build_info/build_info.h
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/lib/support/build_info/srsran/support/build_info/build_info.h
+hashes.h
+/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/lib/support/build_info/hashes.h
+
+hashes.h
+

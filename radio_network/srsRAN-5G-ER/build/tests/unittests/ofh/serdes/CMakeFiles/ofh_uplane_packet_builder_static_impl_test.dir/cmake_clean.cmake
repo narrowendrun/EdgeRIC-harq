@@ -1,0 +1,11 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/ofh_uplane_packet_builder_static_impl_test.dir/ofh_uplane_packet_builder_static_impl_test.cpp.o"
+  "ofh_uplane_packet_builder_static_impl_test"
+  "ofh_uplane_packet_builder_static_impl_test.pdb"
+  "ofh_uplane_packet_builder_static_impl_test[1]_tests.cmake"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/ofh_uplane_packet_builder_static_impl_test.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

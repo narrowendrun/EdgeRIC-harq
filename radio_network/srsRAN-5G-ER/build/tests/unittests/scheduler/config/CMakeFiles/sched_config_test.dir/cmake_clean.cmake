@@ -1,0 +1,10 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/sched_config_test.dir/csi_helper_test.cpp.o"
+  "sched_config_test"
+  "sched_config_test.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/sched_config_test.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

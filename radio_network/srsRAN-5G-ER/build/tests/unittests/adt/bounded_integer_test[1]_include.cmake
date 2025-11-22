@@ -1,0 +1,5 @@
+if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/adt/bounded_integer_test[1]_tests.cmake")
+  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/adt/bounded_integer_test[1]_tests.cmake")
+else()
+  add_test(bounded_integer_test_NOT_BUILT bounded_integer_test_NOT_BUILT)
+endif()

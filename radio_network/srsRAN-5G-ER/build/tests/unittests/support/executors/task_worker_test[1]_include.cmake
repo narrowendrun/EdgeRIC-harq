@@ -1,0 +1,5 @@
+if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/support/executors/task_worker_test[1]_tests.cmake")
+  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/support/executors/task_worker_test[1]_tests.cmake")
+else()
+  add_test(task_worker_test_NOT_BUILT task_worker_test_NOT_BUILT)
+endif()

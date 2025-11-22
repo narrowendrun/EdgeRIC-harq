@@ -1,0 +1,5 @@
+if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi_adaptor/uci_part2_correspondence_test[1]_tests.cmake")
+  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi_adaptor/uci_part2_correspondence_test[1]_tests.cmake")
+else()
+  add_test(uci_part2_correspondence_test_NOT_BUILT uci_part2_correspondence_test_NOT_BUILT)
+endif()
