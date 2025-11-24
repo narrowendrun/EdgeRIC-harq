@@ -1,5 +1,5 @@
 {
-    "cmake.sourceDirectory": "/home/wcsng-23/gitrepos/Ushasi-ER-5G/srs-4G-UE",
+    "cmake.sourceDirectory": "/home/narendran/code/EdgeRIC-harq/radio_network/srs-4G-UE",
     "files.associations": {
         "cctype": "cpp",
         "clocale": "cpp",

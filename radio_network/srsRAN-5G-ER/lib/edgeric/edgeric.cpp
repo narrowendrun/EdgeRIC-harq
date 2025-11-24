@@ -1,10 +1,12 @@
 #include "edgeric.h"
+#include <cstdlib>
+#include <sstream>
 #include <unordered_set>
 
 // -----------------------------------------------------------------------------
 // Static member variable definitions
 // -----------------------------------------------------------------------------
-uint32_t edgeric::tti_cnt = 0;
+std::atomic<uint32_t> edgeric::tti_cnt{0};
 uint32_t edgeric::er_ran_index_weights = 0;
 uint32_t edgeric::er_ran_index_mcs = 0;
 
@@ -23,7 +25,10 @@ std::map<uint16_t, float>   edgeric::weights_recved = {};
 std::map<uint16_t, uint8_t> edgeric::mcs_recved = {};
 
 bool edgeric::enable_logging = false;
-bool edgeric::initialized = false;
+std::atomic<bool> edgeric::initialized{false};
+bool edgeric::send_logging_enabled = false;
+std::once_flag edgeric::init_once_flag;
+std::mutex edgeric::metrics_mutex;
 
 // -----------------------------------------------------------------------------
 // ZeroMQ context and sockets
@@ -38,6 +43,15 @@ zmq::socket_t subscriber_mcs(context, ZMQ_SUB);
 // -----------------------------------------------------------------------------
 void edgeric::init()
 {
+    const char* enable_log_env = std::getenv("EDGERIC_ENABLE_LOGGING");
+    enable_logging = enable_log_env && enable_log_env[0] != '\0';
+
+    const char* send_log_env = std::getenv("EDGERIC_LOG_SEND");
+    send_logging_enabled = send_log_env && send_log_env[0] != '\0';
+    if (send_logging_enabled) {
+        enable_logging = true;
+    }
+
     publisher.bind("tcp://10.53.2.4:5050");
 
     subscriber_weights.connect("tcp://10.53.2.5:5051");
@@ -49,13 +63,12 @@ void edgeric::init()
     subscriber_mcs.setsockopt(ZMQ_SUBSCRIBE, "", 0);
     subscriber_mcs.setsockopt(ZMQ_CONFLATE, &conflate, sizeof(conflate));
 
-    initialized = true;
+    initialized.store(true, std::memory_order_release);
 }
 
 void edgeric::ensure_initialized()
 {
-    if (!initialized)
-        init();
+    std::call_once(init_once_flag, []() { init(); });
 }
 
 // -----------------------------------------------------------------------------
@@ -63,21 +76,27 @@ void edgeric::ensure_initialized()
 // -----------------------------------------------------------------------------
 void edgeric::set_ul_tx_attempt(uint16_t rnti, bool attempt)
 {
-    ul_tx_attempt[rnti] = ul_tx_attempt[rnti] || attempt;
+    std::lock_guard<std::mutex> lock(metrics_mutex);
+    bool& value = ul_tx_attempt[rnti];
+    value = value || attempt;
 }
 
 void edgeric::set_ul_harq_ack(uint16_t rnti, bool ack)
 {
-    ul_harq_ack[rnti] = ul_harq_ack[rnti] || ack;
+    std::lock_guard<std::mutex> lock(metrics_mutex);
+    bool& value = ul_harq_ack[rnti];
+    value = value || ack;
 }
 
 void edgeric::set_rx_bytes(uint16_t rnti, float bytes)
 {
+    std::lock_guard<std::mutex> lock(metrics_mutex);
     rx_bytes[rnti] += bytes;
 }
 
 void edgeric::set_tx_bytes(uint16_t rnti, float bytes)
 {
+    std::lock_guard<std::mutex> lock(metrics_mutex);
     tx_bytes[rnti] += bytes;
 }
 
@@ -88,8 +107,33 @@ void edgeric::send_to_er()
 {
     ensure_initialized();
 
+    const uint32_t tti_snapshot = tti_cnt.load(std::memory_order_relaxed);
+
+    std::map<uint16_t, float>    ue_cqis_snapshot;
+    std::map<uint16_t, float>    ue_snrs_snapshot;
+    std::map<uint16_t, float>    rx_bytes_snapshot;
+    std::map<uint16_t, float>    tx_bytes_snapshot;
+    std::map<uint16_t, uint32_t> ue_ul_buffers_snapshot;
+    std::map<uint16_t, uint32_t> ue_dl_buffers_snapshot;
+    std::map<uint16_t, float>    dl_tbs_snapshot;
+    std::map<uint16_t, bool>     ul_harq_ack_snapshot;
+    std::map<uint16_t, bool>     ul_tx_attempt_snapshot;
+
+    {
+        std::lock_guard<std::mutex> lock(metrics_mutex);
+        ue_cqis_snapshot.swap(ue_cqis);
+        ue_snrs_snapshot.swap(ue_snrs);
+        rx_bytes_snapshot.swap(rx_bytes);
+        tx_bytes_snapshot.swap(tx_bytes);
+        ue_ul_buffers_snapshot = ue_ul_buffers;
+        ue_dl_buffers_snapshot = ue_dl_buffers;
+        dl_tbs_snapshot.swap(dl_tbs_ues);
+        ul_harq_ack_snapshot.swap(ul_harq_ack);
+        ul_tx_attempt_snapshot.swap(ul_tx_attempt);
+    }
+
     Metrics metrics_msg;
-    metrics_msg.set_tti_cnt(tti_cnt);
+    metrics_msg.set_tti_cnt(tti_snapshot);
 
     std::unordered_set<uint16_t> rntis;
     auto collect_keys = [&rntis](const auto& m) {
@@ -98,26 +142,31 @@ void edgeric::send_to_er()
         }
     };
     
-    collect_keys(ue_cqis);
-    collect_keys(ue_snrs);
-    collect_keys(rx_bytes);
-    collect_keys(tx_bytes);
-    collect_keys(ue_ul_buffers);
-    collect_keys(ue_dl_buffers);
-    collect_keys(dl_tbs_ues);
-    collect_keys(ul_harq_ack);
-    collect_keys(ul_tx_attempt);
+    collect_keys(ue_cqis_snapshot);
+    collect_keys(ue_snrs_snapshot);
+    collect_keys(rx_bytes_snapshot);
+    collect_keys(tx_bytes_snapshot);
+    collect_keys(ue_ul_buffers_snapshot);
+    collect_keys(ue_dl_buffers_snapshot);
+    collect_keys(dl_tbs_snapshot);
+    collect_keys(ul_harq_ack_snapshot);
+    collect_keys(ul_tx_attempt_snapshot);
+
+    std::ostringstream send_log;
+    if (send_logging_enabled) {
+        send_log << "[edgeric] send_to_er tti=" << tti_snapshot << " ue_count=" << rntis.size();
+    }
 
     for (uint16_t rnti : rntis) {
-        const float cqi      = ue_cqis.count(rnti) ? ue_cqis[rnti] : 0.0f;
-        const float snr      = ue_snrs.count(rnti) ? ue_snrs[rnti] : 0.0f;
-        const float tx_b     = tx_bytes.count(rnti) ? tx_bytes[rnti] : 0.0f;
-        const float rx_b     = rx_bytes.count(rnti) ? rx_bytes[rnti] : 0.0f;
-        const uint32_t dl_bo = ue_dl_buffers.count(rnti) ? ue_dl_buffers[rnti] : 0;
-        const uint32_t ul_bo = ue_ul_buffers.count(rnti) ? ue_ul_buffers[rnti] : 0;
-        const float dl_tbs   = dl_tbs_ues.count(rnti) ? dl_tbs_ues[rnti] : 0.0f;
-        const bool ack       = ul_harq_ack.count(rnti) ? ul_harq_ack[rnti] : false;
-        const bool attempt   = ul_tx_attempt.count(rnti) ? ul_tx_attempt[rnti] : false;
+        const float cqi      = ue_cqis_snapshot.count(rnti) ? ue_cqis_snapshot[rnti] : 0.0f;
+        const float snr      = ue_snrs_snapshot.count(rnti) ? ue_snrs_snapshot[rnti] : 0.0f;
+        const float tx_b     = tx_bytes_snapshot.count(rnti) ? tx_bytes_snapshot[rnti] : 0.0f;
+        const float rx_b     = rx_bytes_snapshot.count(rnti) ? rx_bytes_snapshot[rnti] : 0.0f;
+        const uint32_t dl_bo = ue_dl_buffers_snapshot.count(rnti) ? ue_dl_buffers_snapshot[rnti] : 0;
+        const uint32_t ul_bo = ue_ul_buffers_snapshot.count(rnti) ? ue_ul_buffers_snapshot[rnti] : 0;
+        const float dl_tbs   = dl_tbs_snapshot.count(rnti) ? dl_tbs_snapshot[rnti] : 0.0f;
+        const bool ack       = ul_harq_ack_snapshot.count(rnti) ? ul_harq_ack_snapshot[rnti] : false;
+        const bool attempt   = ul_tx_attempt_snapshot.count(rnti) ? ul_tx_attempt_snapshot[rnti] : false;
 
         UeMetrics* ue_metrics = metrics_msg.add_ue_metrics();
         ue_metrics->set_rnti(rnti);
@@ -131,16 +180,18 @@ void edgeric::send_to_er()
         ue_metrics->set_ul_harq_ack(ack);
         ue_metrics->set_ul_tx_attempt(attempt);
 
-        // if (tti_cnt % 1000 == 0) {
-        //     std::cout << "[edgeric] TTI " << tti_cnt
-        //               << " rnti=" << rnti
-        //               << " cqi=" << cqi
-        //               << " tx_bytes=" << tx_b
-        //               << " rx_bytes=" << rx_b
-        //               << " ul_tx_attempt=" << attempt
-        //               << " ul_harq_ack=" << ack
-        //               << std::endl;
-        // }
+        if (send_logging_enabled) {
+            send_log << " | rnti=" << rnti
+                     << " cqi=" << cqi
+                     << " snr=" << snr
+                     << " tx_bytes=" << tx_b
+                     << " rx_bytes=" << rx_b
+                     << " dl_bo=" << dl_bo
+                     << " ul_bo=" << ul_bo
+                     << " dl_tbs=" << dl_tbs
+                     << " ul_tx_attempt=" << attempt
+                     << " ul_harq_ack=" << ack;
+        }
     }
 
     std::string serialized_msg;
@@ -153,13 +204,9 @@ void edgeric::send_to_er()
     memcpy(zmq_msg.data(), serialized_msg.data(), serialized_msg.size());
     publisher.send(zmq_msg, zmq::send_flags::dontwait);
 
-    ue_cqis.clear();
-    ue_snrs.clear();
-    tx_bytes.clear();
-    rx_bytes.clear();
-    dl_tbs_ues.clear();
-    ul_harq_ack.clear();
-    ul_tx_attempt.clear();
+    if (send_logging_enabled) {
+        std::cout << send_log.str() << std::endl;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -251,25 +298,50 @@ void edgeric::printmyvariables()
     if (!enable_logging)
         return;
 
+    const uint32_t tti_snapshot = tti_cnt.load(std::memory_order_relaxed);
+
+    std::map<uint16_t, float>    ue_cqis_snapshot;
+    std::map<uint16_t, float>    ue_snrs_snapshot;
+    std::map<uint16_t, float>    rx_bytes_snapshot;
+    std::map<uint16_t, float>    tx_bytes_snapshot;
+    std::map<uint16_t, uint32_t> ue_ul_buffers_snapshot;
+    std::map<uint16_t, uint32_t> ue_dl_buffers_snapshot;
+    std::map<uint16_t, float>    dl_tbs_snapshot;
+    std::map<uint16_t, bool>     ul_tx_attempt_snapshot;
+    std::map<uint16_t, bool>     ul_harq_ack_snapshot;
+
+    {
+        std::lock_guard<std::mutex> lock(metrics_mutex);
+        ue_cqis_snapshot       = ue_cqis;
+        ue_snrs_snapshot       = ue_snrs;
+        rx_bytes_snapshot      = rx_bytes;
+        tx_bytes_snapshot      = tx_bytes;
+        ue_ul_buffers_snapshot = ue_ul_buffers;
+        ue_dl_buffers_snapshot = ue_dl_buffers;
+        dl_tbs_snapshot        = dl_tbs_ues;
+        ul_tx_attempt_snapshot = ul_tx_attempt;
+        ul_harq_ack_snapshot   = ul_harq_ack;
+    }
+
     std::ofstream logfile("log.txt", std::ios_base::app);
     if (!logfile.is_open())
         return;
 
-    logfile << "TTI: " << tti_cnt
+    logfile << "TTI: " << tti_snapshot
             << ", Weights Index: " << er_ran_index_weights
             << ", MCS Index: " << er_ran_index_mcs << "\n";
 
-    for (const auto& cqi_pair : ue_cqis) {
+    for (const auto& cqi_pair : ue_cqis_snapshot) {
         uint16_t rnti = cqi_pair.first;
         logfile << "RNTI: " << rnti
-                << " CQI: " << ue_cqis[rnti]
-                << " SNR: " << (ue_snrs.count(rnti) ? ue_snrs[rnti] : 0)
-                << " TxBytes: " << (tx_bytes.count(rnti) ? tx_bytes[rnti] : 0)
-                << " RxBytes: " << (rx_bytes.count(rnti) ? rx_bytes[rnti] : 0)
-                << " ULBuf: " << (ue_ul_buffers.count(rnti) ? ue_ul_buffers[rnti] : 0)
-                << " DLTBS: " << (dl_tbs_ues.count(rnti) ? dl_tbs_ues[rnti] : 0)
-                << " UL_TX_ATTEMPT: " << (ul_tx_attempt.count(rnti) ? ul_tx_attempt[rnti] : 0)
-                << " UL_HARQ_ACK: " << (ul_harq_ack.count(rnti) ? ul_harq_ack[rnti] : 0)
+                << " CQI: " << ue_cqis_snapshot[rnti]
+                << " SNR: " << (ue_snrs_snapshot.count(rnti) ? ue_snrs_snapshot[rnti] : 0)
+                << " TxBytes: " << (tx_bytes_snapshot.count(rnti) ? tx_bytes_snapshot[rnti] : 0)
+                << " RxBytes: " << (rx_bytes_snapshot.count(rnti) ? rx_bytes_snapshot[rnti] : 0)
+                << " ULBuf: " << (ue_ul_buffers_snapshot.count(rnti) ? ue_ul_buffers_snapshot[rnti] : 0)
+                << " DLTBS: " << (dl_tbs_snapshot.count(rnti) ? dl_tbs_snapshot[rnti] : 0)
+                << " UL_TX_ATTEMPT: " << (ul_tx_attempt_snapshot.count(rnti) ? ul_tx_attempt_snapshot[rnti] : 0)
+                << " UL_HARQ_ACK: " << (ul_harq_ack_snapshot.count(rnti) ? ul_harq_ack_snapshot[rnti] : 0)
                 << std::endl;
     }
 
