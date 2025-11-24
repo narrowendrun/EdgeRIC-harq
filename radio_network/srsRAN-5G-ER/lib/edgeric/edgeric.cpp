@@ -1,4 +1,5 @@
 #include "edgeric.h"
+#include <unordered_set>
 
 // -----------------------------------------------------------------------------
 // Static member variable definitions
@@ -103,33 +104,52 @@ void edgeric::send_to_er()
     Metrics metrics_msg;
     metrics_msg.set_tti_cnt(tti_cnt);
 
-    for (const auto& ue_pair : ue_cqis) {
-        uint16_t rnti = ue_pair.first;
+    // Collect every RNTI that has any metric so UL-only updates are not dropped.
+    std::unordered_set<uint16_t> rntis;
+    auto collect_keys = [&rntis](const auto& m) {
+        for (const auto& kv : m) {
+            rntis.insert(kv.first);
+        }
+    };
+    collect_keys(ue_cqis);
+    collect_keys(ue_snrs);
+    collect_keys(rx_bytes);
+    collect_keys(tx_bytes);
+    collect_keys(ue_ul_buffers);
+    collect_keys(ue_dl_buffers);
+    collect_keys(dl_tbs_ues);
+    collect_keys(ul_harq_ack);
+    collect_keys(ul_tx_attempt);
+
+    for (uint16_t rnti : rntis) {
+        const float cqi      = ue_cqis.count(rnti) ? ue_cqis[rnti] : 0.0f;
+        const float snr      = ue_snrs.count(rnti) ? ue_snrs[rnti] : 0.0f;
+        const float tx_b     = tx_bytes.count(rnti) ? tx_bytes[rnti] : 0.0f;
+        const float rx_b     = rx_bytes.count(rnti) ? rx_bytes[rnti] : 0.0f;
+        const uint32_t dl_bo = ue_dl_buffers.count(rnti) ? ue_dl_buffers[rnti] : 0;
+        const uint32_t ul_bo = ue_ul_buffers.count(rnti) ? ue_ul_buffers[rnti] : 0;
+        const float dl_tbs   = dl_tbs_ues.count(rnti) ? dl_tbs_ues[rnti] : 0.0f;
+        const bool ack       = ul_harq_ack.count(rnti) ? ul_harq_ack[rnti] : false;
+        const bool attempt   = ul_tx_attempt.count(rnti) ? ul_tx_attempt[rnti] : false;
+
         UeMetrics* ue_metrics = metrics_msg.add_ue_metrics();
         ue_metrics->set_rnti(rnti);
-        ue_metrics->set_cqi(static_cast<uint32_t>(ue_pair.second));
-
-        // Optional fields (safe lookup)
-        ue_metrics->set_snr(ue_snrs.count(rnti) ? ue_snrs[rnti] : 0.0f);
-        ue_metrics->set_tx_bytes(tx_bytes.count(rnti) ? tx_bytes[rnti] : 0.0f);
-        ue_metrics->set_rx_bytes(rx_bytes.count(rnti) ? rx_bytes[rnti] : 0.0f);
-        ue_metrics->set_dl_buffer(ue_dl_buffers.count(rnti) ? ue_dl_buffers[rnti] : 0);
-        ue_metrics->set_ul_buffer(ue_ul_buffers.count(rnti) ? ue_ul_buffers[rnti] : 0);
-        ue_metrics->set_dl_tbs(dl_tbs_ues.count(rnti) ? dl_tbs_ues[rnti] : 0);
-
-        // HARQ + TX flags
-        const bool ack = ul_harq_ack.count(rnti) ? ul_harq_ack[rnti] : false;
-        const bool attempt = ul_tx_attempt.count(rnti) ? ul_tx_attempt[rnti] : false;
-
+        ue_metrics->set_cqi(static_cast<uint32_t>(cqi));
+        ue_metrics->set_snr(snr);
+        ue_metrics->set_tx_bytes(tx_b);
+        ue_metrics->set_rx_bytes(rx_b);
+        ue_metrics->set_dl_buffer(dl_bo);
+        ue_metrics->set_ul_buffer(ul_bo);
+        ue_metrics->set_dl_tbs(dl_tbs);
         ue_metrics->set_ul_harq_ack(ack);
         ue_metrics->set_ul_tx_attempt(attempt);
-        // debug edgeric missing data
+
         if (tti_cnt % 1000 == 0) {
             std::cout << "[edgeric] TTI " << tti_cnt
                       << " rnti=" << rnti
-                      << " cqi=" << ue_pair.second
-                      << " tx_bytes=" << (tx_bytes.count(rnti) ? tx_bytes[rnti] : 0.0f) 
-                      << " rx_bytes=" << (rx_bytes.count(rnti) ? rx_bytes[rnti] : 0.0f) 
+                      << " cqi=" << cqi
+                      << " tx_bytes=" << tx_b
+                      << " rx_bytes=" << rx_b
                       << " ul_tx_attempt=" << attempt
                       << " ul_harq_ack=" << ack
                       << std::endl;
