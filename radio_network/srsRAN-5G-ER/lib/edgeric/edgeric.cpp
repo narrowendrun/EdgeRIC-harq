@@ -61,39 +61,26 @@ void edgeric::ensure_initialized()
 // -----------------------------------------------------------------------------
 // HARQ and UL transmission tracking
 // -----------------------------------------------------------------------------
-// void edgeric::set_ul_tx_attempt(uint16_t rnti, bool attempt)
-// {
-//     ul_tx_attempt[rnti] = attempt;
-// }
 void edgeric::set_ul_tx_attempt(uint16_t rnti, bool attempt)
 {
-    ul_tx_attempt[rnti] = attempt;
-    printf("[edgeric::set_ul_tx_attempt] rnti=%u attempt=%d map_addr=%p\n", 
-           rnti, attempt, (void*)&ul_tx_attempt);
+    ul_tx_attempt[rnti] = ul_tx_attempt[rnti] || attempt;
 }
 
-// void edgeric::set_ul_harq_ack(uint16_t rnti, bool ack)
-// {
-//     ul_harq_ack[rnti] = ack;
-// }
 void edgeric::set_ul_harq_ack(uint16_t rnti, bool ack)
 {
-    ul_harq_ack[rnti] = ack;
-    printf("[edgeric::set_ul_harq_ack] rnti=%u ack=%d map_addr=%p\n", 
-           rnti, ack, (void*)&ul_harq_ack);
+    ul_harq_ack[rnti] = ul_harq_ack[rnti] || ack;
 }
+
 void edgeric::set_rx_bytes(uint16_t rnti, float bytes)
 {
-    rx_bytes[rnti] = bytes;
-    printf("[edgeric::set_rx_bytes] rnti=%u bytes=%.0f map_addr=%p\n", 
-           rnti, bytes, (void*)&rx_bytes);
+    rx_bytes[rnti] += bytes;
 }
+
 void edgeric::set_tx_bytes(uint16_t rnti, float bytes)
 {
-    tx_bytes[rnti] = bytes;
-    printf("[edgeric::set_tx_bytes] rnti=%u bytes=%.0f map_addr=%p\n", 
-           rnti, bytes, (void*)&tx_bytes);
+    tx_bytes[rnti] += bytes;
 }
+
 // -----------------------------------------------------------------------------
 // Send real-time UE metrics to EdgeRIC
 // -----------------------------------------------------------------------------
@@ -104,13 +91,13 @@ void edgeric::send_to_er()
     Metrics metrics_msg;
     metrics_msg.set_tti_cnt(tti_cnt);
 
-    // Collect every RNTI that has any metric so UL-only updates are not dropped.
     std::unordered_set<uint16_t> rntis;
     auto collect_keys = [&rntis](const auto& m) {
         for (const auto& kv : m) {
             rntis.insert(kv.first);
         }
     };
+    
     collect_keys(ue_cqis);
     collect_keys(ue_snrs);
     collect_keys(rx_bytes);
@@ -156,7 +143,6 @@ void edgeric::send_to_er()
         }
     }
 
-    // Serialize
     std::string serialized_msg;
     if (!metrics_msg.SerializeToString(&serialized_msg)) {
         std::cerr << "[edgeric] Failed to serialize Metrics message.\n";
@@ -167,14 +153,6 @@ void edgeric::send_to_er()
     memcpy(zmq_msg.data(), serialized_msg.data(), serialized_msg.size());
     publisher.send(zmq_msg, zmq::send_flags::dontwait);
 
-    // Debug: print map addresses and sizes BEFORE clearing
-    printf("[edgeric::send_to_er] BEFORE clear - tx_bytes.size()=%zu rx_bytes.size()=%zu ul_tx_attempt.size()=%zu ul_harq_ack.size()=%zu\n",
-           tx_bytes.size(), rx_bytes.size(), ul_tx_attempt.size(), ul_harq_ack.size());
-    printf("[edgeric::send_to_er] map addresses - tx_bytes=%p rx_bytes=%p ul_tx_attempt=%p ul_harq_ack=%p\n",
-           (void*)&tx_bytes, (void*)&rx_bytes, (void*)&ul_tx_attempt, (void*)&ul_harq_ack);
-
-
-    // Clear after publishing
     ue_cqis.clear();
     ue_snrs.clear();
     tx_bytes.clear();
