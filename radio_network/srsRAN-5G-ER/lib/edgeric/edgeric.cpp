@@ -131,16 +131,16 @@ void edgeric::send_to_er()
         ue_metrics->set_ul_harq_ack(ack);
         ue_metrics->set_ul_tx_attempt(attempt);
 
-        if (tti_cnt % 1000 == 0) {
-            std::cout << "[edgeric] TTI " << tti_cnt
-                      << " rnti=" << rnti
-                      << " cqi=" << cqi
-                      << " tx_bytes=" << tx_b
-                      << " rx_bytes=" << rx_b
-                      << " ul_tx_attempt=" << attempt
-                      << " ul_harq_ack=" << ack
-                      << std::endl;
-        }
+        // if (tti_cnt % 1000 == 0) {
+        //     std::cout << "[edgeric] TTI " << tti_cnt
+        //               << " rnti=" << rnti
+        //               << " cqi=" << cqi
+        //               << " tx_bytes=" << tx_b
+        //               << " rx_bytes=" << rx_b
+        //               << " ul_tx_attempt=" << attempt
+        //               << " ul_harq_ack=" << ack
+        //               << std::endl;
+        // }
     }
 
     std::string serialized_msg;
