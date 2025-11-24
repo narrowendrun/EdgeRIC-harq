@@ -1,5 +1,0 @@
-# Directory labels
- du_manager
-# Source files and their labels
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/du_manager/du_manager_test_helpers.cpp
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/du_manager/procedures/du_manager_procedure_test_helpers.cpp

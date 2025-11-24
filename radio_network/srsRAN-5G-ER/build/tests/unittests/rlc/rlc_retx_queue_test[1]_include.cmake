@@ -1,5 +1,0 @@
-if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/rlc/rlc_retx_queue_test[1]_tests.cmake")
-  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/rlc/rlc_retx_queue_test[1]_tests.cmake")
-else()
-  add_test(rlc_retx_queue_test_NOT_BUILT rlc_retx_queue_test_NOT_BUILT)
-endif()

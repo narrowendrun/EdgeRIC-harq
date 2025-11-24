@@ -1,4 +1,0 @@
-# Directory labels
- cu_cp
-# Source files and their labels
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/cu_cp/ue_manager/ue_manager_test.cpp

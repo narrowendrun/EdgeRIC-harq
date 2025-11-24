@@ -1,5 +1,0 @@
-if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/mac/mac_test[1]_tests.cmake")
-  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/mac/mac_test[1]_tests.cmake")
-else()
-  add_test(mac_test_NOT_BUILT mac_test_NOT_BUILT)
-endif()

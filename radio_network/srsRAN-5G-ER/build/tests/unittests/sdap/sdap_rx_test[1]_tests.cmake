@@ -1,5 +1,0 @@
-add_test( sdap_rx_test.create_new_entity /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/sdap/sdap_rx_test [==[--gtest_filter=sdap_rx_test.create_new_entity]==] --gtest_also_run_disabled_tests)
-set_tests_properties( sdap_rx_test.create_new_entity PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/sdap)
-add_test( sdap_rx_test.test_rx /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/sdap/sdap_rx_test [==[--gtest_filter=sdap_rx_test.test_rx]==] --gtest_also_run_disabled_tests)
-set_tests_properties( sdap_rx_test.test_rx PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/sdap)
-set( sdap_rx_test_TESTS sdap_rx_test.create_new_entity sdap_rx_test.test_rx)

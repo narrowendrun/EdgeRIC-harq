@@ -1,5 +1,0 @@
-if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/phy/upper/rx_buffer_pool_test[1]_tests.cmake")
-  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/phy/upper/rx_buffer_pool_test[1]_tests.cmake")
-else()
-  add_test(rx_buffer_pool_test_NOT_BUILT rx_buffer_pool_test_NOT_BUILT)
-endif()

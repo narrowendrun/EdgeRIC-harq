@@ -1,5 +1,0 @@
-if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/integrationtests/du_high_cu/cu_du_test[1]_tests.cmake")
-  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/integrationtests/du_high_cu/cu_du_test[1]_tests.cmake")
-else()
-  add_test(cu_du_test_NOT_BUILT cu_du_test_NOT_BUILT)
-endif()

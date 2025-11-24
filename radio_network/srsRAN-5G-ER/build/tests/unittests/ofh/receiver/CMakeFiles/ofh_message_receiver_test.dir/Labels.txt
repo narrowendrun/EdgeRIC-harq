@@ -1,4 +1,0 @@
-# Directory labels
- receiver
-# Source files and their labels
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/ofh/receiver/ofh_message_receiver_test.cpp

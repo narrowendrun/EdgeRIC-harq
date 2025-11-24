@@ -1,5 +1,0 @@
-add_test( ul_prach_pdu_builder.valid_basic_parameters_passes /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/ul_prach_builder_test [==[--gtest_filter=ul_prach_pdu_builder.valid_basic_parameters_passes]==] --gtest_also_run_disabled_tests)
-set_tests_properties( ul_prach_pdu_builder.valid_basic_parameters_passes PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders)
-add_test( ul_prach_pdu_builder.valid_maintenance_v3_basic_parameters_passes /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/ul_prach_builder_test [==[--gtest_filter=ul_prach_pdu_builder.valid_maintenance_v3_basic_parameters_passes]==] --gtest_also_run_disabled_tests)
-set_tests_properties( ul_prach_pdu_builder.valid_maintenance_v3_basic_parameters_passes PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders)
-set( ul_prach_builder_test_TESTS ul_prach_pdu_builder.valid_basic_parameters_passes ul_prach_pdu_builder.valid_maintenance_v3_basic_parameters_passes)

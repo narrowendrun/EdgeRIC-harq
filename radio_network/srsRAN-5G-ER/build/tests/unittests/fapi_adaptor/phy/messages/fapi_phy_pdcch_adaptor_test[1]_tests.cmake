@@ -1,3 +1,0 @@
-add_test( fapi_to_phy_pdcch_conversion_test.valid_pdu_conversion_success /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi_adaptor/phy/messages/fapi_phy_pdcch_adaptor_test [==[--gtest_filter=fapi_to_phy_pdcch_conversion_test.valid_pdu_conversion_success]==] --gtest_also_run_disabled_tests)
-set_tests_properties( fapi_to_phy_pdcch_conversion_test.valid_pdu_conversion_success PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi_adaptor/phy/messages)
-set( fapi_phy_pdcch_adaptor_test_TESTS fapi_to_phy_pdcch_conversion_test.valid_pdu_conversion_success)

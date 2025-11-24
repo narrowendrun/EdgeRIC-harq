@@ -1,8 +1,0 @@
-# Directory labels
- sched
-# Source files and their labels
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/scheduler/scheduler_retx_test.cpp
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/scheduler/scheduler_ue_removal_test.cpp
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/scheduler/scheduler_tdd_test.cpp
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/scheduler/scheduler_ue_fallback_mode_test.cpp
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/scheduler/scheduler_ta_cmd_test.cpp

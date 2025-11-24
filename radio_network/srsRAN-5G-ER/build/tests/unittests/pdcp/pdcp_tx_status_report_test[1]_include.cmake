@@ -1,5 +1,0 @@
-if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/pdcp/pdcp_tx_status_report_test[1]_tests.cmake")
-  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/pdcp/pdcp_tx_status_report_test[1]_tests.cmake")
-else()
-  add_test(pdcp_tx_status_report_test_NOT_BUILT pdcp_tx_status_report_test_NOT_BUILT)
-endif()

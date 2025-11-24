@@ -1,4 +1,0 @@
-# Directory labels
- e1ap
-# Source files and their labels
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/e1ap/gateways/e1_gateway_test.cpp

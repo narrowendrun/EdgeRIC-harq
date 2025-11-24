@@ -1,5 +1,0 @@
-if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/ofh/slot_symbol_point_test[1]_tests.cmake")
-  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/ofh/slot_symbol_point_test[1]_tests.cmake")
-else()
-  add_test(slot_symbol_point_test_NOT_BUILT slot_symbol_point_test_NOT_BUILT)
-endif()

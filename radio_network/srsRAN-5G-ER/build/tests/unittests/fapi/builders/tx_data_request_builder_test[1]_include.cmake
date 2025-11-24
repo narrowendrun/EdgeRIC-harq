@@ -1,5 +1,0 @@
-if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/tx_data_request_builder_test[1]_tests.cmake")
-  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/tx_data_request_builder_test[1]_tests.cmake")
-else()
-  add_test(tx_data_request_builder_test_NOT_BUILT tx_data_request_builder_test_NOT_BUILT)
-endif()

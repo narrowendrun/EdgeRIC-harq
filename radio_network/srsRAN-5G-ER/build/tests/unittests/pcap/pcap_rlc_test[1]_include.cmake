@@ -1,5 +1,0 @@
-if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/pcap/pcap_rlc_test[1]_tests.cmake")
-  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/pcap/pcap_rlc_test[1]_tests.cmake")
-else()
-  add_test(pcap_rlc_test_NOT_BUILT pcap_rlc_test_NOT_BUILT)
-endif()

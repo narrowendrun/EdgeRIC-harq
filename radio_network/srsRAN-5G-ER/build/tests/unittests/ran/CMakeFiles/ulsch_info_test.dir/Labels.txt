@@ -1,4 +1,0 @@
-# Directory labels
- ran
-# Source files and their labels
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/ran/pusch/ulsch_info_test.cpp

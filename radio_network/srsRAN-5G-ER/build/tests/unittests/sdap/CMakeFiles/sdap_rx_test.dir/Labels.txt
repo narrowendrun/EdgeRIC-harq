@@ -1,4 +1,0 @@
-# Directory labels
- pdcp
-# Source files and their labels
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/sdap/sdap_rx_test.cpp

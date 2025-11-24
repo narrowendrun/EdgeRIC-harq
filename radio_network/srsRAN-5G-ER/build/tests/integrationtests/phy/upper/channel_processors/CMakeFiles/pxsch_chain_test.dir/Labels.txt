@@ -1,6 +1,0 @@
-# Directory labels
- phy
- tsan
- NO_MEMCHECK
-# Source files and their labels
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/integrationtests/phy/upper/channel_processors/pxsch_chain_test.cpp

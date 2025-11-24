@@ -1,5 +1,0 @@
-if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/dl_pdsch_builder_test[1]_tests.cmake")
-  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/dl_pdsch_builder_test[1]_tests.cmake")
-else()
-  add_test(dl_pdsch_builder_test_NOT_BUILT dl_pdsch_builder_test_NOT_BUILT)
-endif()

@@ -1,3 +1,0 @@
-add_test( e2ap_network_adapter_test.when_e2_setup_response_received_then_ric_connected /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/e2/e2ap_network_adapter_test [==[--gtest_filter=e2ap_network_adapter_test.when_e2_setup_response_received_then_ric_connected]==] --gtest_also_run_disabled_tests)
-set_tests_properties( e2ap_network_adapter_test.when_e2_setup_response_received_then_ric_connected PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/e2)
-set( e2ap_network_adapter_test_TESTS e2ap_network_adapter_test.when_e2_setup_response_received_then_ric_connected)

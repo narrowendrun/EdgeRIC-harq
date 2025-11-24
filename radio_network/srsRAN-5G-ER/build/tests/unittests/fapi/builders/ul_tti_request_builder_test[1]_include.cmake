@@ -1,5 +1,0 @@
-if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/ul_tti_request_builder_test[1]_tests.cmake")
-  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/ul_tti_request_builder_test[1]_tests.cmake")
-else()
-  add_test(ul_tti_request_builder_test_NOT_BUILT ul_tti_request_builder_test_NOT_BUILT)
-endif()

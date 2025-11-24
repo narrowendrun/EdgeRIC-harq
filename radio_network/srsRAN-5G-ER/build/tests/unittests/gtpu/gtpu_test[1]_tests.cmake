@@ -1,7 +1,0 @@
-add_test( gtpu_test.read_teid /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/gtpu/gtpu_test [==[--gtest_filter=gtpu_test.read_teid]==] --gtest_also_run_disabled_tests)
-set_tests_properties( gtpu_test.read_teid PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/gtpu)
-add_test( gtpu_test.pack_unpack /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/gtpu/gtpu_test [==[--gtest_filter=gtpu_test.pack_unpack]==] --gtest_also_run_disabled_tests)
-set_tests_properties( gtpu_test.pack_unpack PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/gtpu)
-add_test( gtpu_test.pack_unpack_ext_hdr /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/gtpu/gtpu_test [==[--gtest_filter=gtpu_test.pack_unpack_ext_hdr]==] --gtest_also_run_disabled_tests)
-set_tests_properties( gtpu_test.pack_unpack_ext_hdr PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/gtpu)
-set( gtpu_test_TESTS gtpu_test.read_teid gtpu_test.pack_unpack gtpu_test.pack_unpack_ext_hdr)

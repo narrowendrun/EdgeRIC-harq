@@ -1,4 +1,0 @@
-# Directory labels
- asn1
-# Source files and their labels
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/tests/unittests/asn1/asn1_e1ap_test.cpp

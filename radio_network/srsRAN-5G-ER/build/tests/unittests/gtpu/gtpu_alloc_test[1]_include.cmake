@@ -1,5 +1,0 @@
-if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/gtpu/gtpu_alloc_test[1]_tests.cmake")
-  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/gtpu/gtpu_alloc_test[1]_tests.cmake")
-else()
-  add_test(gtpu_alloc_test_NOT_BUILT gtpu_alloc_test_NOT_BUILT)
-endif()

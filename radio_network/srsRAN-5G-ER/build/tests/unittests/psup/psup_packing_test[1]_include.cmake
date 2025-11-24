@@ -1,5 +1,0 @@
-if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/psup/psup_packing_test[1]_tests.cmake")
-  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/psup/psup_packing_test[1]_tests.cmake")
-else()
-  add_test(psup_packing_test_NOT_BUILT psup_packing_test_NOT_BUILT)
-endif()

@@ -1,7 +1,0 @@
-add_test( pcap_ngap_test.write_pdu /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/pcap/pcap_ngap_test [==[--gtest_filter=pcap_ngap_test.write_pdu]==] --gtest_also_run_disabled_tests)
-set_tests_properties( pcap_ngap_test.write_pdu PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/pcap)
-add_test( pcap_ngap_test.write_many_spans /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/pcap/pcap_ngap_test [==[--gtest_filter=pcap_ngap_test.write_many_spans]==] --gtest_also_run_disabled_tests)
-set_tests_properties( pcap_ngap_test.write_many_spans PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/pcap)
-add_test( pcap_ngap_test.write_many_byte_buffers /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/pcap/pcap_ngap_test [==[--gtest_filter=pcap_ngap_test.write_many_byte_buffers]==] --gtest_also_run_disabled_tests)
-set_tests_properties( pcap_ngap_test.write_many_byte_buffers PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/pcap)
-set( pcap_ngap_test_TESTS pcap_ngap_test.write_pdu pcap_ngap_test.write_many_spans pcap_ngap_test.write_many_byte_buffers)

@@ -1,5 +1,0 @@
-add_test( rlc_rx_am_test.create_new_entity /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/rlc/rlc_rx_tm_test [==[--gtest_filter=rlc_rx_am_test.create_new_entity]==] --gtest_also_run_disabled_tests)
-set_tests_properties( rlc_rx_am_test.create_new_entity PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/rlc)
-add_test( rlc_rx_am_test.test_rx /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/rlc/rlc_rx_tm_test [==[--gtest_filter=rlc_rx_am_test.test_rx]==] --gtest_also_run_disabled_tests)
-set_tests_properties( rlc_rx_am_test.test_rx PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/rlc)
-set( rlc_rx_tm_test_TESTS rlc_rx_am_test.create_new_entity rlc_rx_am_test.test_rx)

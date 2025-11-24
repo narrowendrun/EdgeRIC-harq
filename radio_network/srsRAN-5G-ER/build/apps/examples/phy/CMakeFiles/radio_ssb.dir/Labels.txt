@@ -1,6 +1,0 @@
-# Directory labels
- phy
-# Source files and their labels
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/apps/examples/phy/radio_ssb.cpp
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/apps/examples/phy/lower_phy_example_factory.cpp
-/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/apps/examples/phy/upper_phy_ssb_example.cpp

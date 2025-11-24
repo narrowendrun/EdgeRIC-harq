@@ -1,5 +1,0 @@
-if(EXISTS "/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/du_manager/du_ue_config_test[1]_tests.cmake")
-  include("/home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/du_manager/du_ue_config_test[1]_tests.cmake")
-else()
-  add_test(du_ue_config_test_NOT_BUILT du_ue_config_test_NOT_BUILT)
-endif()

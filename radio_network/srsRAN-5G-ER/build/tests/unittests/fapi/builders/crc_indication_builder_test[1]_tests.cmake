@@ -1,5 +1,0 @@
-add_test( crc_indication_builder.valid_indication_passes /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/crc_indication_builder_test [==[--gtest_filter=crc_indication_builder.valid_indication_passes]==] --gtest_also_run_disabled_tests)
-set_tests_properties( crc_indication_builder.valid_indication_passes PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders)
-add_test( crc_indication_builder.valid_indication_with_no_metrics_passes /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders/crc_indication_builder_test [==[--gtest_filter=crc_indication_builder.valid_indication_with_no_metrics_passes]==] --gtest_also_run_disabled_tests)
-set_tests_properties( crc_indication_builder.valid_indication_with_no_metrics_passes PROPERTIES WORKING_DIRECTORY /home/EdgeRIC-A-real-time-RIC/srsRAN-5G-ER/build/tests/unittests/fapi/builders)
-set( crc_indication_builder_test_TESTS crc_indication_builder.valid_indication_passes crc_indication_builder.valid_indication_with_no_metrics_passes)
