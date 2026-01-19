@@ -426,7 +426,7 @@ void ue_event_manager::handle_crc_indication(const ul_crc_indication& crc_ind)
             return;
           }
 
-          const uint32_t tti_cnt_snapshot = edgeric::tti_cnt;
+          const uint32_t tti_cnt_snapshot = edgeric::tti_cnt.load(std::memory_order_relaxed);
           const bool     ack              = crc.tb_crc_success;
           const uint64_t total_call_count = ++ul_harq_ack_call_count;
           uint64_t       per_rnti_call_count = 0;
@@ -507,11 +507,12 @@ void ue_event_manager::handle_harq_ind(ue_cell&                               ue
         //printf("tx_bytes: %d\n", tbs.value());
         edgeric::set_tx_bytes(static_cast<unsigned int>(ue_cc.rnti()), tbs.value());   
         // Debug print with [on_gnb] header
-        if (edgeric::tti_cnt % 100 == 0) {
-          printf("[on_gnb] TTI %u rnti=%u tx_bytes=%u\n",
-                edgeric::tti_cnt,
-                static_cast<uint16_t>(ue_cc.rnti()),
-                tbs.value());
+        const uint32_t tti_cnt_snapshot = edgeric::tti_cnt.load(std::memory_order_relaxed);
+        if (tti_cnt_snapshot % 100 == 0) {
+          printf("[on_gnb] TTI %u rnti=%u tx_bytes=%u",
+                 tti_cnt_snapshot,
+                 static_cast<uint16_t>(ue_cc.rnti()),
+                 tbs.value());
         }
       }
     }
